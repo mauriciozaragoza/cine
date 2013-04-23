@@ -48,9 +48,11 @@ class dbDriver{
 		$row = oci_fetch_array($query);
 		if($row['PASSWORD'] == $password){
 			$_SESSION["username"] = $row["USERNAME"];
-			echo "Ganaste";
+			$_SESSION["userrole"] = $row["ROLE_ID"];
+			$_SESSION["employee_id"] = $row["EMPLOYEE_ID"];
+			echo "Bienvenido";
 		} else {
-			echo "Te la pelas!";
+			header('Location: login.php');
 		}
 	}
 	
@@ -64,6 +66,16 @@ class dbDriver{
 		$complex_id = addslashes($complex_id);
 		$query = oci_parse($this->conexion, "insert into cinema_employee values ('$employee_id','$username','$password','$first_name','$last_name','$role_id','$complex_id')");			
 		oci_execute($query);
+	}
+	
+	function verify($user){
+		if($user != 'U00'){
+			header('Location: login.php');
+		}
+	}
+	
+	function getUser(){
+		echo "Welcome ".$_SESSION["username"]."   "."<a href=logout.php>Log out</a>";
 	}
 	
 	function __destruct(){
