@@ -21,6 +21,40 @@ class dbDriver{
 		session_start();
 	}
 	
+	function getCities(){
+		$query = oci_parse($this->conexion, "SELECT DISTINCT city from complex");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option>'.$row['city'].'</option>';
+		}
+	}
+	
+	function getComplex($City){
+		$City = addslashes($City);
+		$query = oci_parse($this->conexion, "SELECT COMPLEX_ID, NAME from complex where CITY='$City'");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option value="'.$row['COMPLEX_ID'].'">'.$row['NAME'].'</option>';
+		}
+	}
+	
+	function getMoviesByComplex($complex_id){
+		$query = oci_parse($this->conexion, "SELECT NAME, MOVIE_ID from movie NATURAL JOIN show where complex_id=$complex_id");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option value="'.$row['MOVIE_ID'].'">'.$row['NAME'].'</option>';
+		}
+	}
+	
+	function getShows($complex_id, $movie_id){
+		$query = oci_parse($this->conexion, "SELECT show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id=$complex_id AND movie_id=$movie_id");
+		echo "<table>";
+		while($row=oci_fetch_array($query)){
+			echo "<tr><td>".$row['show_room_id']."</td><td>".$row['date_of_show']."</td><td>".$row['language']."</td></tr>";
+		}
+		echo "</table>";
+	}
+	
 	function getMovies() {
 		$query = oci_parse($this->conexion, "SELECT * from movie");
 		oci_execute($query);
