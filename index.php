@@ -60,7 +60,7 @@
 			  </li>
 			  <li>
 				<img src="http://placehold.it/1000x500" />
-				<div class="orbit-caption">El señor de los anillos</div>
+				<div class="orbit-caption">El seï¿½or de los anillos</div>
 			  </li>
 			  <li>
 				<img src="http://placehold.it/1000x500" />
