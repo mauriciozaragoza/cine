@@ -4,6 +4,7 @@ include("driver.php");
 $driver = new dbDriver();
 $driver->login('erosespinola', 'trololo');
 
-$driver->getUser();
+$a = $driver->getMovie('M0001');
+echo $a['name'];
 
 ?>

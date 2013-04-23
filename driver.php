@@ -70,11 +70,16 @@ class dbDriver{
 		$movie_id = addslashes($movie_id);
 		$query = oci_parse($this->conexion, "SELECT * from movie where movie_id='$movie_id'");			
 		oci_execute($query);
-		echo "<table>";
-		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['MOVIE_ID']."</td><td>".$row['NAME']."</td><td>".$row['RATING']."</td><td>".$row['DIRECTOR']."</td><td>".$row['ACTORS']."</td><td>".$row['DESCRIPTION']."</td></tr>";
-		}
-		echo "</table>";
+		$row=oci_fetch_array($query);
+		$array = [
+			"name" => $row['NAME'],
+			"rating" => $row['RATING'],
+			"director" => $row['DIRECTOR'],
+			"actors" => $row['ACTORS'],
+			"description" => $row['DESCRIPTION'],
+			"language" => $row['LANGUAGE'],
+		];
+		return $array;
 	}
 	
 	function login($user, $password){
@@ -89,7 +94,7 @@ class dbDriver{
 			$_SESSION["employee_id"] = $row["EMPLOYEE_ID"];
 			echo "Bienvenido";
 		} else {
-			header('Location: login.php');
+			header('Location: login.php?err=1');
 		}
 	}
 	
