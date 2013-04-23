@@ -39,6 +39,7 @@ class dbDriver{
 	}
 	
 	function getMoviesByComplex($complex_id){
+		$complex_id = addslashes($complex_id);
 		$query = oci_parse($this->conexion, "SELECT NAME, MOVIE_ID from movie NATURAL JOIN show where complex_id=$complex_id");
 		oci_execute($query);
 		while($row=oci_fetch_array($query)){
@@ -47,6 +48,8 @@ class dbDriver{
 	}
 	
 	function getShows($complex_id, $movie_id){
+		$complex_id = addslashes($complex_id);
+		$movie_id = addslashes($movie_id);
 		$query = oci_parse($this->conexion, "SELECT show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id=$complex_id AND movie_id=$movie_id");
 		echo "<table>";
 		while($row=oci_fetch_array($query)){
