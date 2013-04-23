@@ -1,3 +1,9 @@
+<?php
+require_once("driver.php");
+require_once("layout.php");
+
+$driver = new dbDriver();
+?>
 <!DOCTYPE html>
 <!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
@@ -17,40 +23,7 @@
   </script>
 </head>
 <body>
-	<nav class="top-bar">
-	  <ul class="title-area">
-		<!-- Title Area -->
-		<li class="name">
-		  <h1><a href="#">Ipsum Cinemas</a></h1>
-		</li>
-		<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-		<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-	  </ul>
-
-		<!-- Right Nav Section -->
-	  <section class="top-bar-section">
-		<ul class="right">
-		  <li class="divider"></li>
-		  <li class="has-form">
-			<form>
-			  <div class="row collapse">
-				<div class="small-8 columns">
-				  <input type="text">
-				</div>
-				<div class="small-4 columns">
-				  <a href="#" class="alert button">Search</a>
-				</div>
-			  </div>
-			</form>
-		  </li>
-		  <li class="divider show-for-small"></li>
-		  <li class="has-form">
-			<a class="button" href="#">Button!</a>
-		  </li>
-		</ul>
-	  </section>
-	</nav>
-
+    <?php print_header($driver); ?>
 	<div class="row">
 		<div class="large-8 columns">
 			<ul data-orbit>
@@ -72,8 +45,7 @@
 
 	<div class="row">
 		<div class="large-12 columns">
-			<h3>Cartelera</h3>
-			
+			<h3>Cartelera</h3>			
 			<!-- Grid Example -->
 			<div class="row">
 				<div class="large-12 columns">
@@ -98,28 +70,12 @@
                     <option>Matrix</option>
                   </select>
                 </form>
-                <a href="cartelera.html" class="button">Ver catalogo</a>
+                <a href="cartelera.php" class="button">Ver catalogo</a>
 				</div>
 			</div>
         </div>
-	</div>
-        
-	<hr />
-    
-    <div class="row">
-		<div class="small-4 columns">
-			acerca de<br/>
-			legal<br/>
-		</div>
-        <div class="small-4 columns">
-			contacto<br/>
-			links<br/>
-		</div>
-        <div class="small-4 columns">
-			<a href="login.html">empleados</a>
-		</div>
-	</div>
-
+	</div>    
+	<?php print_footer(); ?>
   <script>
   document.write('<script src=' +
   ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +

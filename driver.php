@@ -69,13 +69,15 @@ class dbDriver{
 	}
 	
 	function verify($user){
-		if($user != 'U00'){
+		if($user != $_SESSION["userrole"]){
 			header('Location: login.php');
 		}
 	}
 	
 	function getUser(){
-		echo "Welcome ".$_SESSION["username"]."   "."<a href=logout.php>Log out</a>";
+		if (isset($_SESSION["username"])) {
+			echo "Welcome ".$_SESSION["username"]."   "."<a href=logout.php>Log out</a>";
+		}
 	}
 	
 	function __destruct(){

@@ -1,28 +1,26 @@
+<?php
+require_once("driver.php");
+require_once("layout.php");
+
+$driver = new dbDriver();
+?>
 <!DOCTYPE html>
 <!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
 <head>
-	<meta charset="utf-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
-  <title>Ipsum Cinemas</title>
+  <title>Ipsum Cinemas :: Cartelera</title>
   <link rel="stylesheet" href="css/normalize.css" />
-  
   <link rel="stylesheet" href="css/foundation.css" />
-  
-
   <script src="js/vendor/custom.modernizr.js"></script>
-
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+  <script type="text/javascript">
+  </script>
 </head>
 <body>
-
-	<div class="row">
-		<div class="large-12 columns">
-			<h2><a href="index.html">Ipsum Cinemas</a></h2>
-			<hr />
-		</div>
-	</div>
-
+	<?php print_header($driver); ?>
 	<div class="row">
 		<div class="large-12 columns">
 			<h2>Cartelera</h2>
@@ -94,23 +92,7 @@
             </ul>
         </div>
 	</div>
-        
-	<hr />
-    
-    <div class="row">
-		<div class="small-4 columns">
-			acerca de<br/>
-			legal<br/>
-		</div>
-        <div class="small-4 columns">
-			contacto<br/>
-			links<br/>
-		</div>
-        <div class="small-4 columns">
-			<a href="login.html">empleados</a>
-		</div>
-	</div>
-
+	<?php print_footer(); ?>
   <script>
   document.write('<script src=' +
   ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') +
@@ -118,38 +100,6 @@
   </script>
   
   <script src="js/foundation.min.js"></script>
-  <!--
-  
-  <script src="js/foundation/foundation.js"></script>
-  
-  <script src="js/foundation/foundation.alerts.js"></script>
-  
-  <script src="js/foundation/foundation.clearing.js"></script>
-  
-  <script src="js/foundation/foundation.cookie.js"></script>
-  
-  <script src="js/foundation/foundation.dropdown.js"></script>
-  
-  <script src="js/foundation/foundation.forms.js"></script>
-  
-  <script src="js/foundation/foundation.joyride.js"></script>
-  
-  <script src="js/foundation/foundation.magellan.js"></script>
-  
-  <script src="js/foundation/foundation.orbit.js"></script>
-  
-  <script src="js/foundation/foundation.placeholder.js"></script>
-  
-  <script src="js/foundation/foundation.reveal.js"></script>
-  
-  <script src="js/foundation/foundation.section.js"></script>
-  
-  <script src="js/foundation/foundation.tooltips.js"></script>
-  
-  <script src="js/foundation/foundation.topbar.js"></script>
-  
-  -->
-  
   <script>
     $(document).foundation();
   </script>
