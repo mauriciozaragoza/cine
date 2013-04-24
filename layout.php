@@ -13,24 +13,27 @@ function print_header($driver) {
 	</ul>
 	<section class="top-bar-section">
 		<ul class="right">
+		 <li class="has-form" style="backgroud-color:#000000;"> <form>
+          <div class="row collapse">
+            <div class="small-8 columns">
+              <input type="text">
+            </div>
+            <div class="small-4 columns">
+              <a href="#" class="button">Search</a>
+            </div>
+          </div>
+        </form></li>
 		  <li class="divider"></li>
-		  <li class="has-form">
+		  <li class="has-form" style="color:#FFFFFF;">
+		  
 			<form>
-			  <div class="row collapse">
-				<div class="small-8 columns">
-				  <input type="text">
-				</div>
-				<div class="small-4 columns">
-				  <a href="#" class="alert button">Search</a>
-				</div>
-			  </div>
+				
+				<li class="has-form" style="padding:9px;">
+				<?php $driver->getUser(); ?>
+				</li>
+				  <a href="logout.php" class="button">Log Out</a>
 			</form>
-		  </li>
-		  <li class="divider show-for-small"></li>
-		  <li class="has-form">
-			<?php $driver->getUser(); ?>
-			<a class="button" href="#">Button!</a>
-		  </li>
+		  </li>		  
 		</ul>
 	</section>
 </nav>

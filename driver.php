@@ -125,7 +125,7 @@ class dbDriver{
 	
 	function getUser(){
 		if (isset($_SESSION["username"])) {
-			echo "Welcome ".$_SESSION["username"]."   "."<a href=logout.php>Log out</a>";
+			echo "Welcome ".$_SESSION["username"];
 		}
 	}
 	

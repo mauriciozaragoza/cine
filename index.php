@@ -4,6 +4,7 @@ require_once("layout.php");
 
 $driver = new dbDriver();
 ?>
+
 <!DOCTYPE html>
 <!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
@@ -44,11 +45,20 @@ $driver = new dbDriver();
 		});
 	});
 	</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Ipsum Cinemas</title>
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link rel="stylesheet" href="css/foundation.css" />
+  <script src="js/vendor/custom.modernizr.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+  <script type="text/javascript">
+  </script>
 </head>
 <body>
     <?php print_header($driver); ?>
-	<div class="row">
-		<div class="large-8 columns">
+	<div class="row" >
+		<div class="large-8 large-centered columns"align="center">
 			<ul data-orbit>
 			  <li>
 				<img src="http://placehold.it/1000x500" />
