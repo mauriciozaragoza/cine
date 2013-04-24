@@ -56,7 +56,7 @@ class dbDriver{
 		$query = oci_parse($this->conexion, "SELECT show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id='$complex_id' AND movie_id='$movie_id'");
 		oci_execute($query);
 		echo "<table>";
-		echo "<tr><td>Sala</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
+		echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
 		while($row=oci_fetch_array($query)){
 			echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td>".$row['LANGUAGE']."</td></tr>";
 		}
@@ -84,6 +84,8 @@ class dbDriver{
 			"actors" => $row['ACTORS'],
 			"description" => $row['DESCRIPTION'],
 			"language" => $row['LANGUAGE'],
+			"path" => $row['PATH'],
+			"path_banner" => $row['PATH_BANNER']
 		];
 		return $array;
 	}

@@ -9,8 +9,8 @@ require_once("layout.php");
 
 $driver = new dbDriver();
 
-$movie_id = $_GET["complex"];
-$complex_id = $_GET["city"];
+$movie_id = $_GET["movie"];
+$complex_id = $_GET["complex"];
 
 $movie = $driver->getMovie($movie_id);
 ?>
@@ -27,7 +27,9 @@ $movie = $driver->getMovie($movie_id);
   <script src="js/vendor/custom.modernizr.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
   <script type="text/javascript">
-  
+	$(document).ready(function() {
+		$("table").css("width", "100%");
+	});
   </script>
 </head>
 <body>
@@ -39,7 +41,7 @@ $movie = $driver->getMovie($movie_id);
 			<!-- Grid Example -->
 			<div class="row">
                 <div class="large-3 columns">
-                    <img src="http://placehold.it/230x266" />
+                    <img src="<?php echo "img/description/".$movie["path"]?>" />
                 </div>
                 <div class="large-9 columns">
                     <h3><?php echo $movie["name"] ?></h3>
@@ -55,17 +57,6 @@ $movie = $driver->getMovie($movie_id);
 		<div class="large-12 columns">
         <br/>
             <?php $driver->getShows($complex_id, $movie_id); ?>
-            <ul class="pagination">
-              <li class="arrow unavailable"><a href="">&laquo;</a></li>
-              <li class="current"><a href="">1</a></li>
-              <li><a href="">2</a></li>
-              <li><a href="">3</a></li>
-              <li><a href="">4</a></li>
-              <li class="unavailable"><a href="">&hellip;</a></li>
-              <li><a href="">12</a></li>
-              <li><a href="">13</a></li>
-              <li class="arrow"><a href="">&raquo;</a></li>
-            </ul>
         </div>
 	</div>
 	<?php print_footer(); ?>

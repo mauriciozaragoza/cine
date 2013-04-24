@@ -61,16 +61,16 @@ $driver = new dbDriver();
 		<div class="large-8 large-centered columns"align="center">
 			<ul data-orbit>
 			  <li>
-				<img src="http://placehold.it/1000x500" />
+				<img src="img/banner/IronMan3.jpg" />
 				<div class="orbit-caption">Ironman 3</div>
 			  </li>
 			  <li>
-				<img src="http://placehold.it/1000x500" />
-				<div class="orbit-caption">El se�or de los anillos</div>
+				<img src="img/banner/LOTR.jpg" />
+				<div class="orbit-caption">Lord of the Rings</div>
 			  </li>
 			  <li>
-				<img src="http://placehold.it/1000x500" />
-				<div class="orbit-caption">Matrix</div>
+				<img src="img/banner/GangsterPokeSquad.png" />
+				<div class="orbit-caption">Gangster PokeSquad</div>
 			  </li>
 			</ul>
 		</div>
@@ -78,7 +78,7 @@ $driver = new dbDriver();
 
 	<div class="row">
 		<div class="large-12 columns">
-			<h3>Cartelera</h3>			
+			<h3>Catalog</h3>			
 			<!-- Grid Example -->
 			<div class="row">
 				<div class="large-12 columns">
@@ -99,7 +99,7 @@ $driver = new dbDriver();
 					<div id="movie_panel" class="panel">
 						<img id="loader2" src="img/loader1.gif" />
 						<label for="movie">Movie</label>
-						<select id="movie" name="complex">
+						<select id="movie" name="movie">
 						</select>
 					</div>
 					<input type="submit" id="catalog_button" class="button" value="Catalog" />

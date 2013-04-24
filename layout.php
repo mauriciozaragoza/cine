@@ -31,7 +31,14 @@ function print_header($driver) {
 				<li class="has-form" style="padding:9px;">
 				<?php $driver->getUser(); ?>
 				</li>
-				  <a href="logout.php" class="button">Log Out</a>
+				<?php
+					if (isset($_SESSION["username"])) {
+						echo '<a href="logout.php" class="button">Log Out</a>';
+					}
+					else {
+						echo '<a href="login.php" class="button">Login</a>';
+					}
+				?>
 			</form>
 		  </li>		  
 		</ul>
@@ -45,15 +52,15 @@ function print_footer() {
 <hr />
 <div class="row">
 	<div class="small-4 columns">
-		acerca de<br/>
+		about<br/>
 		legal<br/>
 	</div>
 	<div class="small-4 columns">
-		contacto<br/>
+		contact us<br/>
 		links<br/>
 	</div>
 	<div class="small-4 columns">
-		<a href="login.php">empleados</a>
+		<a href="login.php">employees</a>
 	</div>
 </div>
 <?php
