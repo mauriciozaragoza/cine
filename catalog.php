@@ -1,8 +1,18 @@
 <?php
+if (!(isset($_GET["complex"]) && isset($_GET["city"]))) {
+	header("Location: index.php");
+	die();
+}
+
 require_once("driver.php");
 require_once("layout.php");
 
 $driver = new dbDriver();
+
+$movie_id = $_GET["complex"];
+$complex_id = $_GET["city"];
+
+$movie = $driver->getMovie($movie_id);
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
@@ -11,19 +21,20 @@ $driver = new dbDriver();
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
-  <title>Ipsum Cinemas :: Cartelera</title>
+  <title>Ipsum Cinemas :: Catalog</title>
   <link rel="stylesheet" href="css/normalize.css" />
   <link rel="stylesheet" href="css/foundation.css" />
   <script src="js/vendor/custom.modernizr.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
   <script type="text/javascript">
+  
   </script>
 </head>
 <body>
 	<?php print_header($driver); ?>
 	<div class="row">
 		<div class="large-12 columns">
-			<h2>Cartelera</h2>
+			<h2>Catalog</h2>
 
 			<!-- Grid Example -->
 			<div class="row">
@@ -31,10 +42,10 @@ $driver = new dbDriver();
                     <img src="http://placehold.it/230x266" />
                 </div>
                 <div class="large-9 columns">
-                    <h3>El señor de los anillos</h3>
-					<h5>Director: Peter Jackson</h5>
-					<h5>Clasificaci&oacute;n: B</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vel augue orci. Sed velit est, sagittis sit amet pharetra id, feugiat vel elit. Nullam molestie lobortis ligula, nec consequat dui iaculis at. Nullam interdum eros sed velit consectetur euismod. Nullam suscipit laoreet est, vel dapibus lorem eleifend eget. Donec sagittis risus sit amet erat porttitor at porttitor justo commodo. Curabitur varius sodales risus, non vehicula quam congue sed.</p>
+                    <h3><?php echo $movie["name"] ?></h3>
+					<h5>Director: <?php echo $movie["director"] ?></h5>
+					<h5>Rating: <?php echo $movie["rating"] ?></h5>
+                    <p><?php echo $movie["description"] ?></p>
                 </div>
 			</div>
         </div>
@@ -43,42 +54,7 @@ $driver = new dbDriver();
     <div class="row">
 		<div class="large-12 columns">
         <br/>
-            <table width="100%">
-              <thead>
-                <tr>
-                  <th>Sala</th>
-                  <th>Fecha</th>
-                  <th>Hora</th>
-                  <th>Lenguaje</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>21 de febrero de 2013</td>
-                  <td>12:30</td>
-                  <td>Doblada</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>21 de febrero de 2013</td>
-                  <td>13:30</td>
-                  <td>Doblada</td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>21 de febrero de 2013</td>
-                  <td>16:30</td>
-                  <td>Doblada</td>
-                </tr>
-                <tr>
-                  <td>6</td>
-                  <td>21 de febrero de 2013</td>
-                  <td>6:06</td>
-                  <td>Subtitulada</td>
-                </tr>
-              </tbody>
-            </table>
+            <?php $driver->getShows($complex_id, $movie_id); ?>
             <ul class="pagination">
               <li class="arrow unavailable"><a href="">&laquo;</a></li>
               <li class="current"><a href="">1</a></li>

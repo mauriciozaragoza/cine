@@ -1,5 +1,8 @@
-<?php
-
+<?php	
+function escape_quotes($v) {
+	return str_replace("'", "''", $v);
+}
+	
 class dbDriver{
 	private $conexion;
 	
@@ -12,7 +15,7 @@ class dbDriver{
         (Host = info.gda.itesm.mx)
         (Port = 1521)))
         (CONNECT_DATA = (SID = alum)))';
-		$this->conexion = oci_connect("A01225648", "tec648",$db_test);
+		$this->conexion = oci_connect("A01225648", "tec648", $db_test);
 		$err=OciError();
         if ($err){
 			echo 'Error de comunicacion con la BD. '.$err['code'].' '.$err['message'].' '.$err['sqltext'];
@@ -30,7 +33,7 @@ class dbDriver{
 	}
 	
 	function getComplex($City){
-		$City = addslashes($City);
+		$City = escape_quotes($City);
 		$query = oci_parse($this->conexion, "SELECT COMPLEX_ID, NAME from complex where CITY='$City'");
 		oci_execute($query);
 		while($row=oci_fetch_array($query)){
@@ -39,7 +42,7 @@ class dbDriver{
 	}
 	
 	function getMoviesByComplex($complex_id){
-		$complex_id = addslashes($complex_id);
+		$complex_id = escape_quotes($complex_id);
 		$query = oci_parse($this->conexion, "SELECT NAME, MOVIE_ID from movie NATURAL JOIN show where complex_id='$complex_id'");
 		oci_execute($query);
 		while($row=oci_fetch_array($query)){
@@ -48,8 +51,8 @@ class dbDriver{
 	}
 	
 	function getShows($complex_id, $movie_id){
-		$complex_id = addslashes($complex_id);
-		$movie_id = addslashes($movie_id);
+		$complex_id = escape_quotes($complex_id);
+		$movie_id = escape_quotes($movie_id);
 		$query = oci_parse($this->conexion, "SELECT show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id='$complex_id' AND movie_id='$movie_id'");
 		oci_execute($query);
 		echo "<table>";
@@ -68,7 +71,8 @@ class dbDriver{
 	}
 	
 	function getMovie($movie_id) {
-		$movie_id = addslashes($movie_id);
+		$movie_id = escape_quotes($movie_id);
+		//die("SELECT * from movie where movie_id='$movie_id'");
 		$query = oci_parse($this->conexion, "SELECT * from movie where movie_id='$movie_id'");			
 		oci_execute($query);
 		$row=oci_fetch_array($query);
@@ -84,7 +88,7 @@ class dbDriver{
 	}
 	
 	function login($user, $password){
-		$user = addslashes($user);
+		$user = escape_quotes($user);
 		$password = md5($password);
 		$query = oci_parse($this->conexion, "SELECT * from cinema_employee where username='$user'");			
 		oci_execute($query);
@@ -93,20 +97,21 @@ class dbDriver{
 			$_SESSION["username"] = $row["USERNAME"];
 			$_SESSION["userrole"] = $row["ROLE_ID"];
 			$_SESSION["employee_id"] = $row["EMPLOYEE_ID"];
-			echo "Bienvenido";
+			header('Location: index.php');
 		} else {
 			header('Location: login.php?err=1');
 		}
+		die();
 	}
 	
 	function addEmployee($employee_id, $username, $password, $first_name, $last_name, $role_id, $complex_id){
-		$employee_id = addslashes($employee_id);
-		$username = addslashes($username);
+		$employee_id = escape_quotes($employee_id);
+		$username = escape_quotes($username);
 		$password = md5($password);
-		$first_name = addslashes($first_name);
-		$last_name = addslashes($last_name);
-		$role_id = addslashes($role_id);
-		$complex_id = addslashes($complex_id);
+		$first_name = escape_quotes($first_name);
+		$last_name = escape_quotes($last_name);
+		$role_id = escape_quotes($role_id);
+		$complex_id = escape_quotes($complex_id);
 		$query = oci_parse($this->conexion, "insert into cinema_employee values ('$employee_id','$username','$password','$first_name','$last_name','$role_id','$complex_id')");			
 		oci_execute($query);
 	}
@@ -127,5 +132,4 @@ class dbDriver{
 		oci_close($this->conexion);
 	}
 }
-
 ?>

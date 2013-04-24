@@ -2,8 +2,7 @@
 include("driver.php");
 
 $driver = new dbDriver();
-$driver->login('erosespinola', 'trololo');
+// $driver->login('erosespinola', 'trololo');
 
-echo $driver->getMovie('M0001');
-
+echo $driver->getMovie('M0001')["director"];
 ?>

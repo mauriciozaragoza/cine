@@ -4,7 +4,7 @@ require_once("layout.php");
 
 $driver = new dbDriver();
 
-if (isset($_POST["username"])) {
+if (isset($_POST["user"])) {
 	$driver->login($_POST["user"], $_POST["password"]);
 }
 ?>
@@ -15,7 +15,7 @@ if (isset($_POST["username"])) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
-  <title>Ipsum Cinemas :: Cartelera</title>
+  <title>Ipsum Cinemas :: Login</title>
   <link rel="stylesheet" href="css/normalize.css" />
   <link rel="stylesheet" href="css/foundation.css" />
   <script src="js/vendor/custom.modernizr.js"></script>
@@ -44,13 +44,13 @@ if (isset($_POST["username"])) {
 				}
 			}
 			?>
-            <form action="login.php">
-            <label for="user">Username</label>
-            <input name="user" type="text" />
-            <label for="password">Password</label>
-            <input name="password" type="password" />
+            <form action="login.php" method="POST">
+				<label for="user">Username</label>
+				<input name="user" type="text" />
+				<label for="password">Password</label>
+				<input name="password" type="password" />
+				<input type="submit" value="Log-in" />
             </form>
-            <a href="ventacatalogo.html" class="button">Log-in</a>
         </div>
 	</div>
 	<?php print_footer(); ?>
