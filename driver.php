@@ -58,7 +58,7 @@ class dbDriver{
 		echo "<table>";
 		echo "<tr><td>Sala</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
 		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td>".$row['LANGUAGE']."</td></tr>";
+			echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td> </td><td>".$row['LANGUAGE']."</td></tr>";
 		}
 		echo "</table>";
 	}
