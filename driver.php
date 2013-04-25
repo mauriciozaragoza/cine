@@ -32,7 +32,15 @@ class dbDriver{
 		}
 	}
 	
-	function getComplex($City){
+	function getComplex(){
+		$query = oci_parse($this->conexion, "SELECT COMPLEX_ID, NAME from complex");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option value="'.$row['COMPLEX_ID'].'">'.$row['NAME'].'</option>';
+		}
+	}
+	
+	function getComplexByCity($City){
 		$City = escape_quotes($City);
 		$query = oci_parse($this->conexion, "SELECT COMPLEX_ID, NAME from complex where CITY='$City'");
 		oci_execute($query);
@@ -115,19 +123,27 @@ class dbDriver{
 		$last_name = escape_quotes($last_name);
 		$role_id = escape_quotes($role_id);
 		$complex_id = escape_quotes($complex_id);
-		$query = oci_parse($this->conexion, "insert into cinema_employee values ('$employee_id','$username','$password','$first_name','$last_name','$role_id','$complex_id')");			
-		oci_execute($query);
+		$query = oci_parse($this->conexion, "insert into cinema_employee values ('$employee_id','$username','$password','$first_name','$last_name','$role_id','$complex_id')");	
+		return @oci_execute($query);
 	}
 	
-	function verify($user){
-		if($user != $_SESSION["userrole"]){
-			header('Location: login.php');
+	function verify($role){
+		if($role != $_SESSION["userrole"]){
+			header('Location: login.php?err=2');
 		}
 	}
 	
 	function getUser(){
 		if (isset($_SESSION["username"])) {
 			echo "Welcome ".$_SESSION["username"];
+		}
+	}
+	
+	function getRoles(){
+		$query = oci_parse($this->conexion, "SELECT USERROLE_ID, NAME from userrole");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option value="'.$row['USERROLE_ID'].'">'.$row['NAME'].'</option>';
 		}
 	}
 	

@@ -46,6 +46,7 @@ $movie = $driver->getMovie($movie_id);
                 <div class="large-9 columns">
                     <h3><?php echo $movie["name"] ?></h3>
 					<h5>Director: <?php echo $movie["director"] ?></h5>
+					<h5>Actors: <?php echo $movie["actors"] ?></h5>
 					<h5>Rating: <?php echo $movie["rating"] ?></h5>
                     <p><?php echo $movie["description"] ?></p>
                 </div>

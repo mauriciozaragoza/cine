@@ -35,8 +35,16 @@ if (isset($_POST["user"])) {
 				switch ($_GET["err"]) {
 					case 1:
 					?>
-					<div data-alert class="alert-box alert round">
+					<div data-alert class="alert-box alert">
 					  Invalid login
+					  <a href="#" class="close">&times;</a>
+					</div>
+					<?php
+					break;
+					case 2:
+					?>
+					<div data-alert class="alert-box alert">
+					  Insufficient privileges
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
