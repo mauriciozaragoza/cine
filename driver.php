@@ -62,21 +62,31 @@ class dbDriver{
 		$movie_id = escape_quotes($movie_id);
 		$query = oci_parse($this->conexion, "SELECT show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id='$complex_id' AND movie_id='$movie_id'");
 		oci_execute($query);
-		echo "<table>";
-		echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
-		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>".'<a href="#" class="button">Vender</a>'."</td></tr>";
+		if (isset($_SESSION["username"])) {
+			echo "<table>";
+			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
+			while($row=oci_fetch_array($query)){
+				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>		".'<a href="#" class="button">Sell<br>Tickets</a>'."</td></tr>";
+			}
+			echo "</table>";
 		}
-		echo "</table>";
+		else{
+			echo "<table>";
+			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
+			while($row=oci_fetch_array($query)){
+				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td></tr>";
+			}
+			echo "</table>";
+		}
 	}
 			
 	function getEmployees(){
 		$query = oci_parse($this->conexion, "select employee_id, username, first_name, last_name, role_id, complex_id  from cinema_employee where complex_id='".$_SESSION['complex_id']."'");
 		oci_execute($query);
 		echo "<table>";
-		echo "<tr><td>Employee id</td><td>Username</td><td>First Name</td><td>Last Name</td><td>Role Id</td><td>Complex Id</td></tr>";
+		echo "<tr><td>Employee Id</td><td>Username</td><td>First Name</td><td>Last Name</td><td>Role Id</td><td>Edit</td><td>Delete</td></tr>";
 		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['EMPLOYEE_ID']."</td><td>".$row['USERNAME']."</td><td> </td><td>".$row['FIRST_NAME']."</td><td>".$row['LAST_NAME']."</td><td>".$row['ROLE_ID']."</td><td>".$row['COMPLEX_ID']."</td></tr>";
+			echo "<tr><td>".$row['EMPLOYEE_ID']."</td><td>".$row['USERNAME']."</td><td></td><td>".$row['FIRST_NAME']."</td><td>".$row['LAST_NAME']."</td><td>".$row['ROLE_ID']."</td><td>".$row['COMPLEX_ID']."</td><td>".$row['COMPLEX_ID']."</td><td><a href='employee.php?edit='".$row['EMPLOYEE_ID']." class='small button'>Edit</a></td><td><a href='employee.php?delete='".$row['EMPLOYEE_ID']." class='small button alert'>Delete</a></td></tr>";
 		}
 		echo "</table>";
 	}
@@ -216,3 +226,4 @@ class dbDriver{
 	}
 }
 ?>
+
