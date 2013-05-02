@@ -84,9 +84,9 @@ class dbDriver{
 		$query = oci_parse($this->conexion, "select employee_id, username, first_name, last_name, role_id, complex_id  from cinema_employee where complex_id='".$_SESSION['complex_id']."'");
 		oci_execute($query);
 		echo "<table>";
-		echo "<tr><td>Employee id</td><td>Username</td><td>First Name</td><td>Last Name</td><td>Role Id</td><td>Complex Id</td></tr>";
+		echo "<tr><td>Employee Id</td><td>Username</td><td>First Name</td><td>Last Name</td><td>Role Id</td><td>Edit</td><td>Delete</td></tr>";
 		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['EMPLOYEE_ID']."</td><td>".$row['USERNAME']."</td><td> </td><td>".$row['FIRST_NAME']."</td><td>".$row['LAST_NAME']."</td><td>".$row['ROLE_ID']."</td><td>".$row['COMPLEX_ID']."</td></tr>";
+			echo "<tr><td>".$row['EMPLOYEE_ID']."</td><td>".$row['USERNAME']."</td><td></td><td>".$row['FIRST_NAME']."</td><td>".$row['LAST_NAME']."</td><td>".$row['ROLE_ID']."</td><td>".$row['COMPLEX_ID']."</td><td>".$row['COMPLEX_ID']."</td><td><a href='employee.php?edit='".$row['EMPLOYEE_ID']." class='small button'>Edit</a></td><td><a href='employee.php?delete='".$row['EMPLOYEE_ID']." class='small button alert'>Delete</a></td></tr>";
 		}
 		echo "</table>";
 	}
@@ -217,3 +217,4 @@ class dbDriver{
 	}
 }
 ?>
+
