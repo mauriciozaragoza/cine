@@ -79,6 +79,14 @@ class dbDriver{
 		}
 	}
 	
+	function getPayforms(){
+		$query = oci_parse($this->conexion, "SELECT * from payform");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option value="'.$row['PAYFORM_ID'].'">'.$row['NAME'].'</option>';
+		}
+	}
+	
 	function getMovie($movie_id) {
 		$movie_id = escape_quotes($movie_id);
 		//die("SELECT * from movie where movie_id='$movie_id'");
@@ -131,6 +139,10 @@ class dbDriver{
 		if($role != $_SESSION["userrole"]){
 			header('Location: login.php?err=2');
 		}
+	}
+	
+	function getEmployeeID(){
+		return $_SESSION["EMPLOYEE_ID"];
 	}
 	
 	function getUser(){
