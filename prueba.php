@@ -2,7 +2,8 @@
 include("driver.php");
 
 $driver = new dbDriver();
-// $driver->login('erosespinola', 'trololo');
 
-echo $driver->getMovie('M0001')["director"];
+//$driver->login('erosespinola', 'trololo');
+
+$driver->getEmployees("C0001");
 ?>

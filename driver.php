@@ -20,7 +20,6 @@ class dbDriver{
         if ($err){
 			echo 'Error de comunicacion con la BD. '.$err['code'].' '.$err['message'].' '.$err['sqltext'];
         }
-		
 		session_start();
 	}
 	
@@ -70,6 +69,17 @@ class dbDriver{
 		}
 		echo "</table>";
 	}
+			
+	function getEmployees(){
+		$query = oci_parse($this->conexion, "select employee_id, username, first_name, last_name, role_id, complex_id  from cinema_employee where complex_id='".$_SESSION['complex_id']."'");
+		oci_execute($query);
+		echo "<table>";
+		echo "<tr><td>Employee id</td><td>Username</td><td>First Name</td><td>Last Name</td><td>Role Id</td><td>Complex Id</td></tr>";
+		while($row=oci_fetch_array($query)){
+			echo "<tr><td>".$row['EMPLOYEE_ID']."</td><td>".$row['USERNAME']."</td><td> </td><td>".$row['FIRST_NAME']."</td><td>".$row['LAST_NAME']."</td><td>".$row['ROLE_ID']."</td><td>".$row['COMPLEX_ID']."</td></tr>";
+		}
+		echo "</table>";
+	}
 	
 	function getMovies() {
 		$query = oci_parse($this->conexion, "SELECT * from movie");
@@ -89,7 +99,6 @@ class dbDriver{
 	
 	function getMovie($movie_id) {
 		$movie_id = escape_quotes($movie_id);
-		//die("SELECT * from movie where movie_id='$movie_id'");
 		$query = oci_parse($this->conexion, "SELECT * from movie where movie_id='$movie_id'");			
 		oci_execute($query);
 		$row=oci_fetch_array($query);
@@ -106,6 +115,22 @@ class dbDriver{
 		return $array;
 	}
 	
+	function getEmployee($employee_id) {
+		$employee_id = escape_quotes($movie_id);
+		$query = oci_parse($this->conexion, "SELECT * from cinema_employee where employee_id='$employee_id'");			
+		oci_execute($query);
+		$row=oci_fetch_array($query);
+		$array = [
+			"employee_id" => $row['EMPLOYEE_ID'],
+			"username" => $row['USERNAME'],
+			"first_name" => $row['FIRST_NAME'],
+			"last_name" => $row['LAST_NAME'],
+			"role_id" => $row['ROLE_ID'],
+			"complex_id" => $row['COMPLEX_ID'],
+		];
+		return $array;
+	}
+	
 	function login($user, $password){
 		$user = escape_quotes($user);
 		$password = md5($password);
@@ -116,6 +141,7 @@ class dbDriver{
 			$_SESSION["username"] = $row["USERNAME"];
 			$_SESSION["userrole"] = $row["ROLE_ID"];
 			$_SESSION["employee_id"] = $row["EMPLOYEE_ID"];
+			$_SESSION["complex_id"] = $row["COMPLEX_ID"];
 			header('Location: index.php');
 		} else {
 			header('Location: login.php?err=1');
