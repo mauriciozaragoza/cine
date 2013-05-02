@@ -60,13 +60,13 @@ class dbDriver{
 	function getShows($complex_id, $movie_id){
 		$complex_id = escape_quotes($complex_id);
 		$movie_id = escape_quotes($movie_id);
-		$query = oci_parse($this->conexion, "SELECT show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id='$complex_id' AND movie_id='$movie_id'");
+		$query = oci_parse($this->conexion, "SELECT show_id,show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id='$complex_id' AND movie_id='$movie_id'");
 		oci_execute($query);
 		if (isset($_SESSION["username"])) {
 			echo "<table>";
 			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
 			while($row=oci_fetch_array($query)){
-				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>		".'<a href="#" class="button">Sell<br>Tickets</a>'."</td></tr>";
+				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>		".'<a href="ticket.php?'.$row['SHOW_ID'].'" class="button">Sell<br>Tickets</a>'."</td></tr>";
 			}
 			echo "</table>";
 		}
