@@ -131,6 +131,23 @@ class dbDriver{
 		return $array;
 	}
 	
+	function updateEmployee($employee_id, $username, $password, $first_name, $last_name, $role_id, $complex_id){
+		$employee_id = escape_quotes($employee_id);
+		$username = escape_quotes($username);
+		$first_name = escape_quotes($first_name);
+		$last_name = escape_quotes($last_name);
+		$role_id = escape_quotes($role_id);
+		$complex_id = escape_quotes($complex_id);
+		if($password == ""){
+			$query = oci_parse($this->conexion, "update cinema_employee set username='$username', first_name='$first_name', last_name='$last_name', role_id='$role_id', complex_id='$complex_id' where employee_id='$employee_id'");
+		}
+		else{
+			$password = md5($password);
+			$query = oci_parse($this->conexion, "update cinema_employee set username='$username', password='$password', first_name='$first_name', last_name='$last_name', role_id='$role_id', complex_id='$complex_id' where employee_id='$employee_id'");
+		}
+		oci_execute($query);			
+	}
+	
 	function login($user, $password){
 		$user = escape_quotes($user);
 		$password = md5($password);
