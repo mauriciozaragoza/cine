@@ -8,17 +8,45 @@ $driver->verify("U00");
 $success = true;
 $sent = false;
 
-if (isset($_POST["employee_id"])) {
+$editing = isset($_GET["edit"]);
+
+$employee_id = '';
+$username = '';
+$password = '';
+$first_name = '';
+$last_name = '';
+$role = '';
+$complex = '';
+
+if (isset($_GET["submit"])) {
 	$sent = true;
-	$employee_id = $_POST["employee_id"];
+	$employee_id = $editing ? $_GET["edit"] : $_POST["employee_id"];
 	$username = $_POST["username"];
-	$password = $_POST["password"];
+	$password = $_POST["password"] == "*****" ? $password : $_POST["password"];
 	$first_name = $_POST["first_name"];
 	$last_name = $_POST["last_name"];
 	$role = $_POST["role"];
 	$complex = $_POST["complex"];
 	
-	$success = $driver->addEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
+	if ($editing) {
+		$success = $driver->updateEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
+	}
+	else {
+		$success = $driver->addEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
+	}
+}
+
+if ($editing) {
+	$employee = $driver->getEmployee($_GET["edit"]);
+	
+	$employee_id = $employee["employee_id"];
+	$username =  $employee["username"];
+	$first_name = $employee["first_name"];
+	$last_name = $employee["last_name"];
+	$role = $employee["role_id"];
+	$complex = $employee["complex_id"];
+	
+	$driver->verifyComplex($complex);
 }
 ?>
 <!DOCTYPE html>
@@ -46,7 +74,15 @@ if (isset($_POST["employee_id"])) {
 			"Please check your input"
 		);
 		$("#employee_id").rules("add", { regex: "E[0-9]{4}" });
+		
+		<?php
+		if ($editing) {
+			echo '$("#complex").val("'.$complex.'");';
+			echo '$("#role").val("'.$role.'");';
+		}
+		?>
 	});
+	
 	</script>
 </head>
 <body>
@@ -62,7 +98,7 @@ if (isset($_POST["employee_id"])) {
 					if ($success) {
 					?>
 						<div data-alert class="alert-box success">
-						  Employee added successfully
+						  Employee <?php echo $editing ? "edited" : "added" ?> successfully
 						  <a href="#" class="close">&times;</a>
 						</div>
 					<?php 
@@ -76,44 +112,44 @@ if (isset($_POST["employee_id"])) {
 					}
 				}
 				?>
-                <form action="employee.php" id="employee_form" method="POST">
+                <form action="employee.php?submit<?php echo $editing ? "&edit" : ""; ?>" id="employee_form" method="POST">
 					<fieldset>
-						<legend>Add employee</legend>
+						<legend><?php echo $editing ? "Edit" : "Add" ?> employee</legend>
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="employee_id">ID *</label>
-								<input type="text" id="employee_id" name="employee_id" class="required"/>
+								<input type="text" id="employee_id" name="employee_id" value="<?php echo $employee_id ?>" class="required"/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="username">Username *</label>
-								<input type="text" name="username" class="required"/>
+								<input type="text" name="username" value="<?php echo $username ?>" class="required"/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="password">Password *</label>
-								<input type="password" name="password" class="required"/>
+								<label for="password">Password <?php echo $editing ? "*" : ""; ?> </label>
+								<input type="password" name="password" value="<?php echo $editing ? '*****' : ""; ?>" <?php echo $editing ? 'class="required"' : ""; ?> />
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="first_name">First name *</label>
-								<input type="text" name="first_name" class="required"/>
+								<input type="text" name="first_name" value="<?php echo $first_name ?>" class="required"/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="last_name">Last name *</label>
-								<input type="text" name="last_name" class="required"/>
+								<input type="text" name="last_name" value="<?php echo $last_name ?>" class="required"/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="role">Role *</label>
 								<select id="role" name="role">
-								<?php $driver->getRoles(); ?>					
+								<?php $driver->getRoles(); ?>
 								</select>
 							</div>
 						</div>
@@ -125,7 +161,7 @@ if (isset($_POST["employee_id"])) {
 								</select>
 							</div>
 						</div>
-						<input type="submit" value="Create" />
+						<input type="submit" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
 					</fieldset>
 				</form>
 			</div>

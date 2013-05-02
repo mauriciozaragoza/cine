@@ -49,6 +49,14 @@ if (isset($_POST["user"])) {
 					</div>
 					<?php
 					break;
+					case 3:
+					?>
+					<div data-alert class="alert-box alert">
+					  You do not belong to this complex.
+					  <a href="#" class="close">&times;</a>
+					</div>
+					<?php
+					break;
 				}
 			}
 			?>

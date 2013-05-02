@@ -116,7 +116,7 @@ class dbDriver{
 	}
 	
 	function getEmployee($employee_id) {
-		$employee_id = escape_quotes($movie_id);
+		$employee_id = escape_quotes($employee_id);
 		$query = oci_parse($this->conexion, "SELECT * from cinema_employee where employee_id='$employee_id'");			
 		oci_execute($query);
 		$row=oci_fetch_array($query);
@@ -167,6 +167,12 @@ class dbDriver{
 		}
 	}
 	
+	function verifyComplex($complex){
+		if($complex != $_SESSION["complex_id"]){
+			header('Location: login.php?err=3');
+		}
+	}
+	
 	function getEmployeeID(){
 		return $_SESSION["EMPLOYEE_ID"];
 	}
@@ -178,10 +184,10 @@ class dbDriver{
 	}
 	
 	function getRoles(){
-		$query = oci_parse($this->conexion, "SELECT USERROLE_ID, NAME from userrole");
+		$query = oci_parse($this->conexion, "SELECT ROLE_ID, NAME from userrole");
 		oci_execute($query);
 		while($row=oci_fetch_array($query)){
-			echo '<option value="'.$row['USERROLE_ID'].'">'.$row['NAME'].'</option>';
+			echo '<option value="'.$row['ROLE_ID'].'">'.$row['NAME'].'</option>';
 		}
 	}
 	
