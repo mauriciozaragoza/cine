@@ -29,6 +29,7 @@ if (isset($_GET["submit"])) {
 	$complex = $_POST["complex"];
 	
 	if ($editing) {
+		$driver->verifyComplex($complex);
 		$success = $driver->updateEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
 	}
 	else {
@@ -112,7 +113,7 @@ if ($editing) {
 					}
 				}
 				?>
-                <form action="employee.php?submit<?php echo $editing ? "&edit" : ""; ?>" id="employee_form" method="POST">
+                <form action="employee.php?submit<?php echo $editing ? "&edit=$employee_id" : ""; ?>" id="employee_form" method="POST">
 					<fieldset>
 						<legend><?php echo $editing ? "Edit" : "Add" ?> employee</legend>
 						<div class="row">
