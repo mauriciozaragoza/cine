@@ -49,13 +49,9 @@ else if ($editing) {
 		$role = $_POST["role"];
 		$complex = $_POST["complex"];
 		
+		$driver->verifyComplex($complex);
 		$success = $driver->updateEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
-		if ($success) {
-			header("Location: employee.php?msg=2");
-		}
-		else {
-			$msg = 5;
-		}
+		$msg = $success ? 2 : 5;
 	}
 	
 	$employee = $driver->getEmployee($_GET["edit"]);
@@ -65,11 +61,15 @@ else if ($editing) {
 	$last_name = $employee["last_name"];
 	$role = $employee["role_id"];
 	$complex = $employee["complex_id"];
+	
+	$driver->verifyComplex($complex);
 }
 else if ($deleting) {
 	$employee = $driver->getEmployee($_GET["delete"]);
 	$complex = $employee["complex_id"];
 	
+	
+	$driver->verifyComplex($complex);
 	$driver->deleteEmployee($_GET["delete"]);
 	header("Location: employee.php?msg=".($success ? 3 : 6));
 	exit();
@@ -82,7 +82,7 @@ else if ($deleting) {
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
-	<title>Ipsum Cinemas :: Employees</title>
+	<title>Ipsum Cinemas :: Ticket</title>
 	<link rel="stylesheet" href="css/normalize.css" />
 	<link rel="stylesheet" href="css/foundation.css" />
 	<script src="js/vendor/custom.modernizr.js"></script>
@@ -166,7 +166,6 @@ else if ($deleting) {
 				<?php
 				if ($reading) {
 					$driver->getEmployees();
-					echo "<a href='employee.php?create' class='small button'>Add new employee</a>";
 				}
 				else {
 				?>
@@ -176,7 +175,7 @@ else if ($deleting) {
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="employee_id">ID *</label>
-								<input type="text" id="employee_id" name="employee_id" value="<?php echo $employee_id ?>" class="required" <?php echo $editing ? "readonly" : "" ?>/>
+								<input type="text" id="employee_id" name="employee_id" value="<?php echo $employee_id ?>" class="required"/>
 							</div>
 						</div>
 						<div class="row">
@@ -219,9 +218,7 @@ else if ($deleting) {
 								</select>
 							</div>
 						</div>
-						<br />
-						<input type="submit" class="small button" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
-						<a href='employee.php' class='small button alert'>Cancel</a>
+						<input type="submit" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
 					</fieldset>
 				</form>
 				<?php

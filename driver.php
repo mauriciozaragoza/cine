@@ -81,12 +81,12 @@ class dbDriver{
 	}
 			
 	function getEmployees(){
-		$query = oci_parse($this->conexion, "select employee_id, username, first_name, last_name, role_id, complex_id  from cinema_employee where complex_id='".$_SESSION['complex_id']."'");
+		$query = oci_parse($this->conexion, "select employee_id, username, first_name, last_name, role_id, complex_id  from cinema_employee");
 		oci_execute($query);
 		echo "<table>";
 		echo "<tr><td>Employee Id</td><td>Username</td><td>First Name</td><td>Last Name</td><td>Role Id</td><td>Edit</td><td>Delete</td></tr>";
 		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['EMPLOYEE_ID']."</td><td>".$row['USERNAME']."</td><td></td><td>".$row['FIRST_NAME']."</td><td>".$row['LAST_NAME']."</td><td>".$row['ROLE_ID']."</td><td>".$row['COMPLEX_ID']."</td><td>".$row['COMPLEX_ID']."</td><td><a href='employee.php?edit='".$row['EMPLOYEE_ID']." class='small button'>Edit</a></td><td><a href='employee.php?delete='".$row['EMPLOYEE_ID']." class='small button alert'>Delete</a></td></tr>";
+			echo "<tr><td>".$row['EMPLOYEE_ID']."</td><td>".$row['USERNAME']."</td><td>".$row['FIRST_NAME']."</td><td>".$row['LAST_NAME']."</td><td>".$row['ROLE_ID']."</td><td><a href='employee.php?edit=".$row['EMPLOYEE_ID']."' class='small button'>Edit</a></td><td><a href='employee.php?delete=".$row['EMPLOYEE_ID']."' class='small button alert'>Delete</a></td></tr>";
 		}
 		echo "</table>";
 	}
@@ -142,7 +142,6 @@ class dbDriver{
 	}
 	
 	function updateEmployee($employee_id, $username, $password, $first_name, $last_name, $role_id, $complex_id) {
-		
 		$employee_id = escape_quotes($employee_id);
 		$username = escape_quotes($username);
 		$first_name = escape_quotes($first_name);
@@ -159,6 +158,14 @@ class dbDriver{
 		}
 		
 		return @oci_execute($query);			
+	}
+	
+	function deleteEmployee($employee_id) {
+		$employee_id = escape_quotes($employee_id);
+		$query = oci_parse($this->conexion, "DELETE FROM cinema_employee WHERE employee_id='$employee_id'");
+		//die("DELETE FROM cinema_employee WHERE employee_id='$employee_id'");
+		oci_commit($this->conexion);
+		return @oci_execute($query);
 	}
 	
 	function login($user, $password){
