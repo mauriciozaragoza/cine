@@ -60,13 +60,13 @@ class dbDriver{
 	function getShows($complex_id, $movie_id){
 		$complex_id = escape_quotes($complex_id);
 		$movie_id = escape_quotes($movie_id);
-		$query = oci_parse($this->conexion, "SELECT show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id='$complex_id' AND movie_id='$movie_id'");
+		$query = oci_parse($this->conexion, "SELECT show_id,show_room_id, date_of_show, language from movie NATURAL JOIN show where complex_id='$complex_id' AND movie_id='$movie_id'");
 		oci_execute($query);
 		if (isset($_SESSION["username"])) {
 			echo "<table>";
-			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
+			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td><td>Sell</td></tr>";
 			while($row=oci_fetch_array($query)){
-				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>		".'<a href="#" class="button">Sell<br>Tickets</a>'."</td></tr>";
+				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>		".'<a href="ticket.php?'.$row['SHOW_ID'].'" class="small button">Sell<br>Tickets</a>'."</td></tr>";
 			}
 			echo "</table>";
 		}
@@ -113,6 +113,7 @@ class dbDriver{
 		oci_execute($query);
 		$row=oci_fetch_array($query);
 		$array = [
+			"movie_id" => $row['MOVIE_ID'];
 			"name" => $row['NAME'],
 			"rating" => $row['RATING'],
 			"director" => $row['DIRECTOR'],
@@ -198,6 +199,54 @@ class dbDriver{
 		return @oci_execute($query);
 	}
 	
+	function addMovie($movie_id, $name, $rating, $director, $actors, $description, $language, $path, $path_banner){
+		$movie_id = escape_quotes($movie_id);
+		$name = escape_quotes($name);
+		$rating = escape_quotes($rating);
+		$director = escape_quotes($director);
+		$actors = escape_quotes($actors);
+		$description = escape_quotes($description);
+		$language = escape_quotes($language);
+		$path = escape_quotes($path);
+		$path_banner = escape_quotes($path_banner);
+		$query = oci_parse($this->conexion, "insert into movie values ('$movie_id', '$name', '$rating', '$director', '$actors', '$description', '$language', '$path', '$path_banner')");	
+		return @oci_execute($query);
+	}
+	
+	function updateMovie($movie_id, $name, $rating, $director, $actors, $description, $language, $path, $path_banner){
+		$movie_id = escape_quotes($movie_id);
+		$name = escape_quotes($name);
+		$rating = escape_quotes($rating);
+		$director = escape_quotes($director);
+		$actors = escape_quotes($actors);
+		$description = escape_quotes($description);
+		$language = escape_quotes($language);
+		$path = escape_quotes($path);
+		$path_banner = escape_quotes($path_banner);
+		$query = oci_parse($this->conexion, "update movie set name='$name', rating='$rating', director='$director', actors='$actors', description='$description', language='$language', path='$path', path_banner='$path_banner' where movie_id='$movie_id'");	
+		return @oci_execute($query);
+	}
+	
+	function addShow($show_id, $date_of_show, $show_room_id, $complex_id, $movie_id){
+		$show_id = escape_quotes($show_id);
+		$date_of_show = escape_quotes($date_of_show);
+		$show_room_id = escape_quotes($show_room_id);
+		$complex_id = escape_quotes($complex_id);
+		$movie_id = escape_quotes($movie_id);
+		$query = oci_parse($this->conexion, "insert into show values ('$show_id', '$date_of_show', '$show_room_id', '$complex_id', '$movie_id')");	
+		return @oci_execute($query);
+	}
+	
+	function updateShow($show_id, $date_of_show, $show_room_id, $complex_id, $movie_id){
+		$show_id = escape_quotes($show_id);
+		$date_of_show = escape_quotes($date_of_show);
+		$show_room_id = escape_quotes($show_room_id);
+		$complex_id = escape_quotes($complex_id);
+		$movie_id = escape_quotes($movie_id);
+		$query = oci_parse($this->conexion, "update show set date_of_show='$date_of_show', show_room_id='$show_room_id', complex_id='$complex_id', movie_id='$movie_id' where show_id='$show_id'");	
+		return @oci_execute($query);
+	}
+	
 	function verify($role){
 		if($role != $_SESSION["userrole"]){
 			header('Location: login.php?err=2');
@@ -228,9 +277,19 @@ class dbDriver{
 		}
 	}
 	
+	function available_sits($SHOW_ID){
+		$query = oci_parse($this->conexion, "select a.num-b.num AVAILABLE_SITS from(
+(select no_spots as num from show_room where show_room_id=
+(select show_room_id from ticket natural join show where show_id='$SHOW_ID' group by show_room_id)) a
+CROSS JOIN
+(select count(show_id) as num from ticket natural join show where show_id='$SHOW_ID' group by show_room_id) b
+);");
+		oci_execute($query);
+		return $row['AVAILABLE_SITS'];
+	}
+	
 	function __destruct(){
 		oci_close($this->conexion);
 	}
 }
 ?>
-
