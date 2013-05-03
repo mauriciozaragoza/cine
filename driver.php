@@ -113,6 +113,7 @@ class dbDriver{
 		oci_execute($query);
 		$row=oci_fetch_array($query);
 		$array = [
+			"movie_id" => $row['MOVIE_ID'];
 			"name" => $row['NAME'],
 			"rating" => $row['RATING'],
 			"director" => $row['DIRECTOR'],
@@ -188,6 +189,54 @@ class dbDriver{
 		$role_id = escape_quotes($role_id);
 		$complex_id = escape_quotes($complex_id);
 		$query = oci_parse($this->conexion, "insert into cinema_employee values ('$employee_id','$username','$password','$first_name','$last_name','$role_id','$complex_id')");	
+		return @oci_execute($query);
+	}
+	
+	function addMovie($movie_id, $name, $rating, $director, $actors, $description, $language, $path, $path_banner){
+		$movie_id = escape_quotes($movie_id);
+		$name = escape_quotes($name);
+		$rating = escape_quotes($rating);
+		$director = escape_quotes($director);
+		$actors = escape_quotes($actors);
+		$description = escape_quotes($description);
+		$language = escape_quotes($language);
+		$path = escape_quotes($path);
+		$path_banner = escape_quotes($path_banner);
+		$query = oci_parse($this->conexion, "insert into movie values ('$movie_id', '$name', '$rating', '$director', '$actors', '$description', '$language', '$path', '$path_banner')");	
+		return @oci_execute($query);
+	}
+	
+	function updateMovie($movie_id, $name, $rating, $director, $actors, $description, $language, $path, $path_banner){
+		$movie_id = escape_quotes($movie_id);
+		$name = escape_quotes($name);
+		$rating = escape_quotes($rating);
+		$director = escape_quotes($director);
+		$actors = escape_quotes($actors);
+		$description = escape_quotes($description);
+		$language = escape_quotes($language);
+		$path = escape_quotes($path);
+		$path_banner = escape_quotes($path_banner);
+		$query = oci_parse($this->conexion, "update movie set name='$name', rating='$rating', director='$director', actors='$actors', description='$description', language='$language', path='$path', path_banner='$path_banner' where movie_id='$movie_id'");	
+		return @oci_execute($query);
+	}
+	
+	function addShow($show_id, $date_of_show, $show_room_id, $complex_id, $movie_id){
+		$show_id = escape_quotes($show_id);
+		$date_of_show = escape_quotes($date_of_show);
+		$show_room_id = escape_quotes($show_room_id);
+		$complex_id = escape_quotes($complex_id);
+		$movie_id = escape_quotes($movie_id);
+		$query = oci_parse($this->conexion, "insert into show values ('$show_id', '$date_of_show', '$show_room_id', '$complex_id', '$movie_id')");	
+		return @oci_execute($query);
+	}
+	
+	function updateShow($show_id, $date_of_show, $show_room_id, $complex_id, $movie_id){
+		$show_id = escape_quotes($show_id);
+		$date_of_show = escape_quotes($date_of_show);
+		$show_room_id = escape_quotes($show_room_id);
+		$complex_id = escape_quotes($complex_id);
+		$movie_id = escape_quotes($movie_id);
+		$query = oci_parse($this->conexion, "update show set date_of_show='$date_of_show', show_room_id='$show_room_id', complex_id='$complex_id', movie_id='$movie_id' where show_id='$show_id'");	
 		return @oci_execute($query);
 	}
 	
