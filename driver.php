@@ -66,7 +66,7 @@ class dbDriver{
 			echo "<table>";
 			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
 			while($row=oci_fetch_array($query)){
-				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>		".'<a href="ticket.php?'.$row['SHOW_ID'].'" class="button">Sell<br>Tickets</a>'."</td></tr>";
+				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>		".'<a href="ticket.php?'.$row['SHOW_ID'].'" class="small-button">Sell<br>Tickets</a>'."</td></tr>";
 			}
 			echo "</table>";
 		}
@@ -221,9 +221,19 @@ class dbDriver{
 		}
 	}
 	
+	function available_sits($SHOW_ID){
+		$query = oci_parse($this->conexion, "select a.num-b.num AVAILABLE_SITS from(
+(select no_spots as num from show_room where show_room_id=
+(select show_room_id from ticket natural join show where show_id='$SHOW_ID' group by show_room_id)) a
+CROSS JOIN
+(select count(show_id) as num from ticket natural join show where show_id='$SHOW_ID' group by show_room_id) b
+);");
+		oci_execute($query);
+		return $row['AVAILABLE_SITS'];
+	}
+	
 	function __destruct(){
 		oci_close($this->conexion);
 	}
 }
 ?>
-
