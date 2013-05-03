@@ -278,6 +278,7 @@ class dbDriver{
 	}
 	
 	function available_sits($SHOW_ID){
+		$SHOW_ID = escape_quotes($SHOW_ID);
 		$query = oci_parse($this->conexion, "select a.num-b.num AVAILABLE_SITS from(
 (select no_spots as num from show_room where show_room_id=
 (select show_room_id from ticket natural join show where show_id='$SHOW_ID' group by show_room_id)) a
@@ -286,6 +287,25 @@ CROSS JOIN
 );");
 		oci_execute($query);
 		return $row['AVAILABLE_SITS'];
+	}
+	
+	function sell_tickets($PAYMENT_ID, $SHOW_ID, $NO_TICKETS){
+		$PAYMENT_ID = escape_quotes($PAYMENT_ID);
+		$SHOW_ID = escape_quotes($SHOW_ID);
+		$NO_TICKETS = escape_quotes($NO_TICKETS);
+		foreach(range(1,$NO_TICKETS) as $num) {
+		  $query = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID');");
+			oci_execute($query);
+		}	
+	}
+	
+	function getShowroomsByComplex($COMPLEX_ID){
+		$COMPLEX_ID = escape_quotes($COMPLEX_ID);
+		$query = oci_parse($this->conexion, "select SHOW_ROOM_ID from show_room where complex_id='$COMPLEX_ID';");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option>'.$row['SHOW_ROOM_ID'].'</option>';
+		}
 	}
 	
 	function __destruct(){
