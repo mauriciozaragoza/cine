@@ -60,7 +60,7 @@ function print_footer() {
 		links<br/>
 	</div>
 	<div class="small-4 columns">
-		<a href="employee.php">employees</a>
+		<a href="admin.php">admin panel</a>
 	</div>
 </div>
 <?php

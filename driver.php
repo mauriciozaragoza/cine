@@ -113,7 +113,7 @@ class dbDriver{
 		oci_execute($query);
 		$row=oci_fetch_array($query);
 		$array = [
-			"movie_id" => $row['MOVIE_ID'];
+			"movie_id" => $row['MOVIE_ID'],
 			"name" => $row['NAME'],
 			"rating" => $row['RATING'],
 			"director" => $row['DIRECTOR'],
