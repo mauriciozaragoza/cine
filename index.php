@@ -25,7 +25,7 @@ $driver = new dbDriver();
 
 		$("#city").change(function() {
 			$("#loader1").show();
-			$("#complex").load("complex.php", {"city":$(this).val()}, function() {
+			$("#complex").load("complex_loader.php", {"city":$(this).val()}, function() {
 				$(this).prepend('<option disabled selected="selected">Choose your complex</option>');
 				$("#loader1").hide();
 			});
@@ -34,7 +34,7 @@ $driver = new dbDriver();
 		
 		$("#complex").change(function() {
 			$("#loader2").show();
-			$("#movie").load("movies_by_complex.php", {"complex":$(this).val()}, function() {
+			$("#movie").load("movie_loader.php", {"complex":$(this).val()}, function() {
 				$("#loader2").hide();
 				$(this).prepend('<option disabled selected="selected">Choose your movie</option>');
 			});

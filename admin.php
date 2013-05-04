@@ -39,6 +39,7 @@ $driver->verify("U00");
 			<div class="row">
 				<div class="large-12 columns">
 				<a href="employee.php">Employees</a><br />
+				<a href="movie.php">Movies</a><br />
 				<a href="show.php">Shows</a><br />
 				<a href="catalog.php">Catalog</a><br />
 				</div>

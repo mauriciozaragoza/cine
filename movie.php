@@ -14,61 +14,70 @@ $reading = !($editing || $creating || $deleting);
 
 $msg = isset($_GET["msg"]) ? $_GET["msg"] : 0;
 
-$employee_id = '';
-$username = '';
-$password = '';
-$first_name = '';
-$last_name = '';
-$role = '';
-$complex = '';
+$movie_id = '';
+$name = '';
+$rating = '';
+$director = '';
+$actors = '';
+$description = '';
+$language = '';
+$path = '';
+$path_banner = '';
 
 if ($creating) {
 	if (isset($_GET["submit"])) {
 		$sent = true;
-		$employee_id = $editing ? $_GET["edit"] : $_POST["employee_id"];
-		$username = $_POST["username"];
-		$password = $_POST["password"];
-		$first_name = $_POST["first_name"];
-		$last_name = $_POST["last_name"];
-		$role = $_POST["role"];
-		$complex = $_POST["complex"];
+		$movie_id = $editing ? $_GET["edit"] : $_POST["movie_id"];
+		$name = $_POST["name"];
+		$rating = $_POST["rating"];
+		$director = $_POST["director"];
+		$actors = $_POST["actors"];
+		$description = $_POST["description"];
+		$language = $_POST["language"];
+		$path = $_POST["path"];
+		$path_banner = $_POST["path_banner"];
 		
-		$success = $driver->addEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
-		header("Location: employee.php?msg=".($success ? 1 : 4));
+		$success = $driver->addMovie($movie_id, $name, $rating, $director, $actors, $description, $language, $path, $path_banner);
+		header("Location: movie.php?msg=".($success ? 1 : 4));
 		exit();
 	}
 }
 else if ($editing) {
 	if (isset($_GET["submit"])) {
 		$sent = true;
-		$employee_id = $editing ? $_GET["edit"] : $_POST["employee_id"];
-		$username = $_POST["username"];
-		$password = $_POST["password"] == "*****" ? $password : $_POST["password"];
-		$first_name = $_POST["first_name"];
-		$last_name = $_POST["last_name"];
-		$role = $_POST["role"];
-		$complex = $_POST["complex"];
+		$movie_id = $editing ? $_GET["edit"] : $_POST["movie_id"];
+		$name = $_POST["name"];
+		$rating = $_POST["rating"];
+		$director = $_POST["director"];
+		$actors = $_POST["actors"];
+		$description = $_POST["description"];
+		$language = $_POST["language"];
+		$path = $_POST["path"];
+		$path_banner = $_POST["path_banner"];
 		
-		$success = $driver->updateEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
+		$success = $driver->updateMovie($movie_id, $name, $rating, $director, $actors, $description, $language, $path, $path_banner);
 		if ($success) {
-			header("Location: employee.php?msg=2");
+			header("Location: movie.php?msg=2");
 		}
 		else {
 			$msg = 5;
 		}
 	}
 	
-	$employee = $driver->getEmployee($_GET["edit"]);
-	$employee_id = $employee["employee_id"];
-	$username =  $employee["username"];
-	$first_name = $employee["first_name"];
-	$last_name = $employee["last_name"];
-	$role = $employee["role_id"];
-	$complex = $employee["complex_id"];
+	$movie = $driver->getMovie($_GET["edit"]);
+	$movie_id = $movie["movie_id"];
+	$name = $movie["name"];
+	$rating = $movie["rating"];
+	$director = $movie["director"];
+	$actors = $movie["actors"];
+	$description = $movie["description"];
+	$language = $movie["language"];
+	$path = $movie["path"];
+	$path_banner = $movie["path_banner"];
 }
 else if ($deleting) {
-	$success = $driver->deleteEmployee($_GET["delete"]);
-	header("Location: employee.php?msg=".($success ? 3 : 6));
+	$success = $driver->deleteMovie($_GET["delete"]);
+	header("Location: movie.php?msg=".($success ? 3 : 6));
 	exit();
 }
 ?>
@@ -79,7 +88,7 @@ else if ($deleting) {
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
-	<title>Ipsum Cinemas :: Employees</title>
+	<title>Ipsum Cinemas :: Movies</title>
 	<link rel="stylesheet" href="css/normalize.css" />
 	<link rel="stylesheet" href="css/foundation.css" />
 	<script src="js/vendor/custom.modernizr.js"></script>
@@ -90,7 +99,11 @@ else if ($deleting) {
 		<?php
 		if ($editing || $creating) {
 			echo '$("#date_show").datepicker({dateFormat: \'d-M-y\'});';
-			
+		}
+		
+		if ($editing) {
+			echo '$("#complex").val("'.$complex.'");';
+			echo '$("#role").val("'.$role.'");';
 			?>
 			$("#employee_form").validate();
 			$.validator.addMethod(
@@ -104,11 +117,6 @@ else if ($deleting) {
 			$("#employee_id").rules("add", { regex: "E[0-9]{4}" });
 			<?php
 		}
-		
-		if ($editing) {
-			echo '$("#complex").val("'.$complex.'");';
-			echo '$("#role").val("'.$role.'");';
-		}
 		?>
 	});
 	
@@ -118,16 +126,14 @@ else if ($deleting) {
 	<?php print_header($driver); ?>
 	<div class="row">
 		<div class="large-12 columns">
-			<h2>Employees</h2>
-
-			<!-- Grid Example -->
+			<h2>Movies</h2>
 			<div class="row">
 				<?php
 				switch ($msg) {
 				case 1:
 					?>
 					<div data-alert class="alert-box success">
-					  Employee added successfully
+					  Movie added successfully
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
@@ -135,7 +141,7 @@ else if ($deleting) {
 				case 2:
 					?>
 					<div data-alert class="alert-box success">
-					  Employee updated successfully
+					  Movie updated successfully
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
@@ -143,7 +149,7 @@ else if ($deleting) {
 				case 3:
 					?>
 					<div data-alert class="alert-box success">
-					  Employee deleted successfully
+					  Movie deleted successfully
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
@@ -159,7 +165,7 @@ else if ($deleting) {
 				case 6:
 					?>
 					<div data-alert class="alert-box alert">
-					  Could not delete employee
+					  Could not delete Movie
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
@@ -168,63 +174,71 @@ else if ($deleting) {
 				?>
 				<?php
 				if ($reading) {
-					$driver->getEmployees();
-					echo "<a href='employee.php?create' class='small button'>Add new employee</a>";
+					$driver->getMovies();
+					echo "<a href='movie.php?create' class='small button'>Add new movie</a>";
 				}
 				else {
 				?>
-                <form action="employee.php?submit<?php echo $editing ? "&edit=$employee_id" : "&create"; ?>" id="employee_form" method="POST">
+                <form action="movie.php?submit<?php echo $editing ? "&edit=$movie_id" : "&create"; ?>" id="employee_form" method="POST">
 					<fieldset>
-						<legend><?php echo $editing ? "Edit" : "Add" ?> employee</legend>
+						<legend><?php echo $editing ? "Edit" : "Add" ?> movie</legend>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="employee_id">ID *</label>
-								<input type="text" id="employee_id" name="employee_id" value="<?php echo $employee_id ?>" class="required" <?php echo $editing ? "readonly" : "" ?>/>
+								<label for="movie_id">ID *</label>
+								<input type="text" id="movie_id" name="movie_id" value="<?php echo $movie_id ?>" class="required" <?php echo $editing ? "readonly" : "" ?>/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="username">Username *</label>
-								<input type="text" name="username" value="<?php echo $username ?>" class="required"/>
+								<label for="name">Movie title *</label>
+								<input type="text" name="name" value="<?php echo $name ?>" class="required"/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="password">Password <?php echo $editing ? "*" : ""; ?> </label>
-								<input type="password" name="password" value="<?php echo $editing ? '*****' : ""; ?>" <?php echo $editing ? 'class="required"' : ""; ?> />
+								<label for="rating">Rating</label>
+								<input type="text" name="rating" value="<?php echo $rating ?>"/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="first_name">First name *</label>
-								<input type="text" name="first_name" value="<?php echo $first_name ?>" class="required"/>
+								<label for="director">Director *</label>
+								<input type="text" name="director" value="<?php echo $director ?>" class="required"/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="last_name">Last name *</label>
-								<input type="text" name="last_name" value="<?php echo $last_name ?>" class="required"/>
+								<label for="actors">Actors *</label>
+								<textarea name="actors"><?php echo $actors ?></textarea>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="role">Role *</label>
-								<select id="role" name="role">
-								<?php $driver->getRoles(); ?>
-								</select>
+								<label for="description">Description</label>
+								<textarea name="description"><?php echo $description ?></textarea>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="complex">Complex *</label>
-								<select id="complex" name="complex">
-								<?php $driver->getComplex(); ?>
-								</select>
+								<label for="language">Language *</label>
+								<input type="text" name="language" value="<?php echo $language ?>" class="required"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-4 columns">
+								<label for="path">Picture *</label>
+								<input type="text" name="path" value="<?php echo $path ?>" class="required"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-4 columns">
+								<label for="path_banner">Banner picture *</label>
+								<input type="text" name="path_banner" value="<?php echo $path_banner ?>" class="required"/>
 							</div>
 						</div>
 						<br />
 						<input type="submit" class="small button" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
-						<a href='employee.php' class='small button alert'>Cancel</a>
+						<a href='movie.php' class='small button alert'>Cancel</a>
 					</fieldset>
 				</form>
 				<?php

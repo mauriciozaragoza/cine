@@ -23,7 +23,6 @@ $movie = '';
 if ($creating) {
 	if (isset($_GET["submit"])) {
 		$sent = true;
-		$show_id = $editing ? $_GET["edit"] : $_POST["show_id"];
 		$date_show = $_POST["date_show"];
 		$complex = $_POST["complex"];
 		$show_room = $_POST["show_room"];
@@ -60,7 +59,7 @@ else if ($editing) {
 	$movie = $show["movie_id"];
 }
 else if ($deleting) {
-	$driver->deleteShow($_GET["delete"]);
+	$success = $driver->deleteShow($_GET["delete"]);
 	header("Location: show.php?msg=".($success ? 3 : 6));
 	exit();
 }
@@ -72,7 +71,7 @@ else if ($deleting) {
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
-	<title>Ipsum Cinemas :: Ticket</title>
+	<title>Ipsum Cinemas :: Shows</title>
 	<link rel="stylesheet" href="css/normalize.css" />
 	<link rel="stylesheet" href="css/foundation.css" />
 	<script src="js/vendor/custom.modernizr.js"></script>
@@ -82,7 +81,7 @@ else if ($deleting) {
 	<script type="text/javascript">
 	$(document).ready(function() {
 		$("#complex").change(function() {
-			$("#movie").load("movies_by_complex.php", {"complex":$(this).val()}, function() {
+			$("#movie").load("movie_loader.php", {}, function() {
 				$(this).prepend('<option disabled selected="selected">Pick a movie</option>');
 			});
 			$("#show_room").load("showroom.php", {"complex":$(this).val()}, function() {
@@ -93,10 +92,10 @@ else if ($deleting) {
 		<?php
 		if ($editing || $creating) {
 			echo '$("#date_show").datepicker({dateFormat: \'d-M-y\'});';
-		}	
+			echo '$("#show_form").validate();';
+		}
 		
 		if ($editing) {
-			echo '$("#show_form").validate();';
 			echo '$("#complex").val("'.$complex.'");';
 			echo '$("#movie").val("'.$movie.'");';
 			echo '$("#show_room").val("'.$show_room.'");';
@@ -161,10 +160,11 @@ else if ($deleting) {
 				<?php
 				if ($reading) {
 					$driver->getShowsByComplex();
+					echo "<a href='show.php?create' class='small button'>Add new show</a>";
 				}
 				else {
 				?>
-                <form action="show.php?submit<?php echo $editing ? "&edit=$show_id" : ""; ?>" id="show_form" method="POST">
+                <form action="show.php?submit<?php echo $editing ? "&edit=$show_id" : "&create"; ?>" id="show_form" method="POST">
 					<fieldset>
 						<legend><?php echo $editing ? "Edit" : "Add" ?> show</legend>
 						<div class="row">
@@ -176,8 +176,8 @@ else if ($deleting) {
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="complex">Complex *</label>
-								<select id="complex" name="complex">
-								<option selected>Pick a complex</option>
+								<select id="complex" name="complex" class="required">
+								<option selected disabled>Pick a complex</option>
 								<?php $driver->getComplex(); ?>
 								</select>
 							</div>
@@ -185,7 +185,7 @@ else if ($deleting) {
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="show_room">Show room *</label>
-								<select id="show_room" name="show_room">
+								<select id="show_room" name="show_room" class="required">
 								<?php 
 								if ($editing) {
 									$driver->getShowroomsByComplex($complex);
@@ -197,7 +197,7 @@ else if ($deleting) {
 						<div class="row">
 							<div class="large-4 columns">
 								<label for="movie">Movie *</label>
-								<select id="movie" name="movie">
+								<select id="movie" name="movie" class="required">
 								<?php 
 								if ($editing) {
 									$driver->getMoviesByComplex($complex);

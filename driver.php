@@ -110,6 +110,14 @@ class dbDriver{
 		}
 	}
 	
+	function getAllMovies() {
+		$query = oci_parse($this->conexion, "SELECT * from movie");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option value="'.$row['MOVIE_ID'].'">'.$row['NAME'].'</option>';
+		}
+	}
+	
 	function getPayforms(){
 		$query = oci_parse($this->conexion, "SELECT * from payform");
 		oci_execute($query);
@@ -277,6 +285,7 @@ class dbDriver{
 		$show_room_id = escape_quotes($show_room_id);
 		$complex_id = escape_quotes($complex_id);
 		$movie_id = escape_quotes($movie_id);
+		die ("ARREGLEN ESTO, insercion no lleva ID: insert into show values ('$show_id', '$date_of_show', '$show_room_id', '$complex_id', '$movie_id')");
 		$query = oci_parse($this->conexion, "insert into show values ('$show_id', '$date_of_show', '$show_room_id', '$complex_id', '$movie_id')");	
 		return @oci_execute($query);
 	}
