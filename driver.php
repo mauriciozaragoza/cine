@@ -50,6 +50,7 @@ class dbDriver{
 	
 	function getMoviesByComplex($complex_id){
 		$complex_id = escape_quotes($complex_id);
+		// FIXME deben ser distinct
 		$query = oci_parse($this->conexion, "SELECT NAME, MOVIE_ID from movie NATURAL JOIN show where complex_id='$complex_id'");
 		oci_execute($query);
 		while($row=oci_fetch_array($query)){
@@ -279,14 +280,13 @@ class dbDriver{
 		return @oci_execute($query);
 	}
 	
-	function addShow($show_id, $date_of_show, $show_room_id, $complex_id, $movie_id){
+	function addShow($date_of_show, $show_room_id, $complex_id, $movie_id){
 		$show_id = escape_quotes($show_id);
 		$date_of_show = escape_quotes($date_of_show);
 		$show_room_id = escape_quotes($show_room_id);
 		$complex_id = escape_quotes($complex_id);
 		$movie_id = escape_quotes($movie_id);
-		die ("ARREGLEN ESTO, insercion no lleva ID: insert into show values ('$show_id', '$date_of_show', '$show_room_id', '$complex_id', '$movie_id')");
-		$query = oci_parse($this->conexion, "insert into show values ('$show_id', '$date_of_show', '$show_room_id', '$complex_id', '$movie_id')");	
+		$query = oci_parse($this->conexion, "insert into show values (show_id_sequence.nextval, '$date_of_show', '$show_room_id', '$complex_id', '$movie_id')");
 		return @oci_execute($query);
 	}
 	

@@ -28,7 +28,7 @@ if ($creating) {
 		$show_room = $_POST["show_room"];
 		$movie = $_POST["movie"];
 		
-		$success = $driver->addShow($show_id, $date_show, $show_room, $complex, $movie);
+		$success = $driver->addShow($date_show, $show_room, $complex, $movie);
 		header("Location: show.php?msg=".($success ? 1 : 4));
 		exit();
 	}
@@ -84,7 +84,7 @@ else if ($deleting) {
 			$("#movie").load("movie_loader.php", {}, function() {
 				$(this).prepend('<option disabled selected="selected">Pick a movie</option>');
 			});
-			$("#show_room").load("showroom.php", {"complex":$(this).val()}, function() {
+			$("#show_room").load("showroom_loader.php", {"complex":$(this).val()}, function() {
 				$(this).prepend('<option disabled selected="selected">Pick a showroom</option>');
 			});
 		});
@@ -200,7 +200,7 @@ else if ($deleting) {
 								<select id="movie" name="movie" class="required">
 								<?php 
 								if ($editing) {
-									$driver->getMoviesByComplex($complex);
+									$driver->getAllMovies();
 								}
 								?>
 								</select>

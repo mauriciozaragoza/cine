@@ -9,11 +9,6 @@ $driver->verify("U00");
 $success = true;
 $sent = false;
 
-// complex must be specified
-if (!isset($_GET["complex"])) {
-	header("Location: .php?");
-}
-
 $editing = isset($_GET["edit"]);
 $creating = isset($_GET["create"]);
 $deleting = isset($_GET["delete"]);
