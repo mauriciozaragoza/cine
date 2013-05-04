@@ -91,6 +91,17 @@ class dbDriver{
 		echo "</table>";
 	}
 	
+	function getShowsComplex(){
+		$query = oci_parse($this->conexion, "select show_id, name, movie_id, date_of_show, show_room_id, complex_id  from show natural join movie order by show_id");
+		oci_execute($query);
+		echo "<table>";
+		echo "<tr><td>Show Id</td><td>Name</td><td>Movie Id</td><td>Date</td><td>Show Room</td><td>Complex Id</td><td>Edit</td><td>Delete</td></tr>";
+		while($row=oci_fetch_array($query)){
+			echo "<tr><td>".$row['SHOW_ID']."</td><td>".$row['NAME']."</td><td>".$row['MOVIE_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['COMPLEX_ID']."</td><td><a href='employee.php?edit=".$row['SHOW_ID']."' class='small button'>Edit</a></td><td><a href='employee.php?delete=".$row['SHOW_ID']."' class='small button alert'>Delete</a></td></tr>";
+		}
+		echo "</table>";
+	}
+	
 	function getMovies() {
 		$query = oci_parse($this->conexion, "SELECT * from movie");
 		oci_execute($query);
@@ -113,7 +124,7 @@ class dbDriver{
 		oci_execute($query);
 		$row=oci_fetch_array($query);
 		$array = [
-			"movie_id" => $row['MOVIE_ID'];
+			"movie_id" => $row['MOVIE_ID'],
 			"name" => $row['NAME'],
 			"rating" => $row['RATING'],
 			"director" => $row['DIRECTOR'],
@@ -122,6 +133,21 @@ class dbDriver{
 			"language" => $row['LANGUAGE'],
 			"path" => $row['PATH'],
 			"path_banner" => $row['PATH_BANNER']
+		];
+		return $array;
+	}
+	
+	function getShow($show_id) {
+		$show_id = escape_quotes($show_id);
+		$query = oci_parse($this->conexion, "SELECT * from show where show_id='$show_id'");			
+		oci_execute($query);
+		$row=oci_fetch_array($query);
+		$array = [
+			"show_id" => $row['SHOW_ID'],
+			"date_of_show" => $row['DATE_OF_SHOW'],
+			"show_room_id" => $row['SHOW_ROOM_ID'],
+			"complex_id" => $row['COMPLEX_ID'],
+			"movie_id" => $row['MOVIE_ID']
 		];
 		return $array;
 	}
