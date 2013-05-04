@@ -14,62 +14,56 @@ $reading = !($editing || $creating || $deleting);
 
 $msg = isset($_GET["msg"]) ? $_GET["msg"] : 0;
 
-$employee_id = '';
-$username = '';
-$password = '';
-$first_name = '';
-$last_name = '';
-$role = '';
+$show_id = '';
+$date_show = '';
 $complex = '';
+$show_room = '';
+$movie = '';
 
-// if ($creating) {
-	// if (isset($_GET["submit"])) {
-		// $sent = true;
-		// $employee_id = $editing ? $_GET["edit"] : $_POST["employee_id"];
-		// $username = $_POST["username"];
-		// $password = $_POST["password"];
-		// $first_name = $_POST["first_name"];
-		// $last_name = $_POST["last_name"];
-		// $role = $_POST["role"];
-		// $complex = $_POST["complex"];
+if ($creating) {
+	if (isset($_GET["submit"])) {
+		$sent = true;
+		$show_id = $editing ? $_GET["edit"] : $_POST["show_id"];
+		$date_show = $_POST["date_show"];
+		$complex = $_POST["complex"];
+		$show_room = $_POST["show_room"];
+		$movie = $_POST["movie"];
 		
-		// //$success = $driver->addEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
-		// header("Location: employee.php?msg=".($success ? 1 : 4));
-		// exit();
-	// }
-// }
-// else if ($editing) {
-	// if (isset($_GET["submit"])) {
-		// $sent = true;
-		// $employee_id = $editing ? $_GET["edit"] : $_POST["employee_id"];
-		// $username = $_POST["username"];
-		// $password = $_POST["password"] == "*****" ? $password : $_POST["password"];
-		// $first_name = $_POST["first_name"];
-		// $last_name = $_POST["last_name"];
-		// $role = $_POST["role"];
-		// $complex = $_POST["complex"];
+		$success = $driver->addShow($show_id, $date_show, $show_room, $complex, $movie);
+		header("Location: show.php?msg=".($success ? 1 : 4));
+		exit();
+	}
+}
+else if ($editing) {
+	if (isset($_GET["submit"])) {
+		$sent = true;
+		$show_id = $editing ? $_GET["edit"] : $_POST["show_id"];
+		$date_show = $_POST["date_show"];
+		$complex = $_POST["complex"];
+		$show_room = $_POST["show_room"];
+		$movie = $_POST["movie"];
 		
-		// //$success = $driver->updateEmployee($employee_id, $username, $password, $first_name, $last_name, $role, $complex);
-		// $msg = $success ? 2 : 5;
-	// }
-	
-	// $employee = $driver->getEmployee($_GET["edit"]);
-	// $employee_id = $employee["employee_id"];
-	// $username =  $employee["username"];
-	// $first_name = $employee["first_name"];
-	// $last_name = $employee["last_name"];
-	// $role = $employee["role_id"];
-	// $complex = $employee["complex_id"];
-// }
-// else if ($deleting) {
-	// $employee = $driver->getEmployee($_GET["delete"]);
-	// $complex = $employee["complex_id"];
-	
-	// $driver->verifyComplex($complex);
-	// $driver->deleteEmployee($_GET["delete"]);
-	// header("Location: employee.php?msg=".($success ? 3 : 6));
-	// exit();
-// }
+		$success = $driver->updateShow($show_id, $date_show, $show_room, $complex, $movie);
+		if ($success) {
+			header("Location: show.php?msg=2");
+		}
+		else {
+			$msg = 5;
+		}
+	}
+
+	$show = $driver->getShow($_GET["edit"]);
+	$show_id = $show["show_id"];
+	$date_show = $show["date_of_show"];
+	$complex = $show["complex_id"];
+	$show_room = $show["show_room_id"];
+	$movie = $show["movie_id"];
+}
+else if ($deleting) {
+	$driver->deleteShow($_GET["delete"]);
+	header("Location: show.php?msg=".($success ? 3 : 6));
+	exit();
+}
 ?>
 <!DOCTYPE html>
 <!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en"> <![endif]-->
@@ -87,19 +81,25 @@ $complex = '';
 	<script src="js/jquery.validate.js" ></script>
 	<script type="text/javascript">
 	$(document).ready(function() {
-		$("#show_form").validate();
-		$("#date_show").datepicker();
-		
 		$("#complex").change(function() {
 			$("#movie").load("movies_by_complex.php", {"complex":$(this).val()}, function() {
-				$(this).prepend('<option disabled selected="selected">Choose your movie</option>');
+				$(this).prepend('<option disabled selected="selected">Pick a movie</option>');
+			});
+			$("#show_room").load("showroom.php", {"complex":$(this).val()}, function() {
+				$(this).prepend('<option disabled selected="selected">Pick a showroom</option>');
 			});
 		});
 		
 		<?php
+		if ($editing || $creating) {
+			echo '$("#date_show").datepicker({dateFormat: \'d-M-y\'});';
+		}	
+		
 		if ($editing) {
+			echo '$("#show_form").validate();';
 			echo '$("#complex").val("'.$complex.'");';
 			echo '$("#movie").val("'.$movie.'");';
+			echo '$("#show_room").val("'.$show_room.'");';
 		}
 		?>
 	});
@@ -160,7 +160,7 @@ $complex = '';
 				?>
 				<?php
 				if ($reading) {
-					$driver->getShowsAdmin();
+					$driver->getShowsByComplex();
 				}
 				else {
 				?>
@@ -177,6 +177,7 @@ $complex = '';
 							<div class="large-4 columns">
 								<label for="complex">Complex *</label>
 								<select id="complex" name="complex">
+								<option selected>Pick a complex</option>
 								<?php $driver->getComplex(); ?>
 								</select>
 							</div>
@@ -185,6 +186,11 @@ $complex = '';
 							<div class="large-4 columns">
 								<label for="show_room">Show room *</label>
 								<select id="show_room" name="show_room">
+								<?php 
+								if ($editing) {
+									$driver->getShowroomsByComplex($complex);
+								}
+								?>
 								</select>
 							</div>
 						</div>
@@ -192,10 +198,16 @@ $complex = '';
 							<div class="large-4 columns">
 								<label for="movie">Movie *</label>
 								<select id="movie" name="movie">
+								<?php 
+								if ($editing) {
+									$driver->getMoviesByComplex($complex);
+								}
+								?>
 								</select>
 							</div>
 						</div>
-						<input type="submit" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
+						<input type="submit" class="small button" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
+						<a href='show.php' class='small button alert'>Cancel</a>
 					</fieldset>
 				</form>
 				<?php

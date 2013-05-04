@@ -90,21 +90,22 @@ else if ($deleting) {
 	<script src="js/jquery.validate.js" ></script>
 	<script type="text/javascript">
 	$(document).ready(function() {
-		$("#employee_form").validate();
-		$.validator.addMethod(
-			"regex",
-			function(value, element, regexp) {
-				var re = new RegExp(regexp);
-				return this.optional(element) || re.test(value);
-			},
-			"Please check your input"
-		);
-		$("#employee_id").rules("add", { regex: "E[0-9]{4}" });
-		
 		<?php
 		if ($editing) {
 			echo '$("#complex").val("'.$complex.'");';
 			echo '$("#role").val("'.$role.'");';
+			?>
+			$("#employee_form").validate();
+			$.validator.addMethod(
+				"regex",
+				function(value, element, regexp) {
+					var re = new RegExp(regexp);
+					return this.optional(element) || re.test(value);
+				},
+				"Please check your input"
+			);
+			$("#employee_id").rules("add", { regex: "E[0-9]{4}" });
+			<?php
 		}
 		?>
 	});

@@ -281,16 +281,6 @@ class dbDriver{
 		return @oci_execute($query);
 	}
 	
-	function updateShow($show_id, $date_of_show, $show_room_id, $complex_id, $movie_id){
-		$show_id = escape_quotes($show_id);
-		$date_of_show = escape_quotes($date_of_show);
-		$show_room_id = escape_quotes($show_room_id);
-		$complex_id = escape_quotes($complex_id);
-		$movie_id = escape_quotes($movie_id);
-		$query = oci_parse($this->conexion, "update show set date_of_show='$date_of_show', show_room_id='$show_room_id', complex_id='$complex_id', movie_id='$movie_id' where show_id='$show_id'");	
-		return @oci_execute($query);
-	}
-	
 	function verify($role){
 		if($role != $_SESSION["userrole"]){
 			header('Location: login.php?err=2');
@@ -338,14 +328,14 @@ CROSS JOIN
 		$SHOW_ID = escape_quotes($SHOW_ID);
 		$NO_TICKETS = escape_quotes($NO_TICKETS);
 		foreach(range(1,$NO_TICKETS) as $num) {
-		  $query = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID');");
+		  $query = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID')");
 			oci_execute($query);
 		}	
 	}
 	
 	function getShowroomsByComplex($COMPLEX_ID){
 		$COMPLEX_ID = escape_quotes($COMPLEX_ID);
-		$query = oci_parse($this->conexion, "select SHOW_ROOM_ID from show_room where complex_id='$COMPLEX_ID';");
+		$query = oci_parse($this->conexion, "select SHOW_ROOM_ID from show_room where complex_id='$COMPLEX_ID'");
 		oci_execute($query);
 		while($row=oci_fetch_array($query)){
 			echo '<option>'.$row['SHOW_ROOM_ID'].'</option>';
