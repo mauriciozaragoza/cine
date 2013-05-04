@@ -91,6 +91,17 @@ class dbDriver{
 		echo "</table>";
 	}
 	
+	function getShowsComplex(){
+		$query = oci_parse($this->conexion, "select show_id, name, movie_id, date_of_show, show_room_id, complex_id  from show natural join movie order by show_id");
+		oci_execute($query);
+		echo "<table>";
+		echo "<tr><td>Show Id</td><td>Name</td><td>Movie Id</td><td>Date</td><td>Show Room</td><td>Complex Id</td><td>Edit</td><td>Delete</td></tr>";
+		while($row=oci_fetch_array($query)){
+			echo "<tr><td>".$row['SHOW_ID']."</td><td>".$row['NAME']."</td><td>".$row['MOVIE_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['COMPLEX_ID']."</td><td><a href='employee.php?edit=".$row['SHOW_ID']."' class='small button'>Edit</a></td><td><a href='employee.php?delete=".$row['SHOW_ID']."' class='small button alert'>Delete</a></td></tr>";
+		}
+		echo "</table>";
+	}
+	
 	function getMovies() {
 		$query = oci_parse($this->conexion, "SELECT * from movie");
 		oci_execute($query);
@@ -122,6 +133,21 @@ class dbDriver{
 			"language" => $row['LANGUAGE'],
 			"path" => $row['PATH'],
 			"path_banner" => $row['PATH_BANNER']
+		];
+		return $array;
+	}
+	
+	function getShow($show_id) {
+		$show_id = escape_quotes($show_id);
+		$query = oci_parse($this->conexion, "SELECT * from show where show_id='$show_id'");			
+		oci_execute($query);
+		$row=oci_fetch_array($query);
+		$array = [
+			"show_id" => $row['SHOW_ID'],
+			"date_of_show" => $row['DATE_OF_SHOW'],
+			"show_room_id" => $row['SHOW_ROOM_ID'],
+			"complex_id" => $row['COMPLEX_ID'],
+			"movie_id" => $row['MOVIE_ID']
 		];
 		return $array;
 	}
@@ -278,6 +304,7 @@ class dbDriver{
 	}
 	
 	function available_sits($SHOW_ID){
+		$SHOW_ID = escape_quotes($SHOW_ID);
 		$query = oci_parse($this->conexion, "select a.num-b.num AVAILABLE_SITS from(
 (select no_spots as num from show_room where show_room_id=
 (select show_room_id from ticket natural join show where show_id='$SHOW_ID' group by show_room_id)) a
@@ -286,6 +313,25 @@ CROSS JOIN
 );");
 		oci_execute($query);
 		return $row['AVAILABLE_SITS'];
+	}
+	
+	function sell_tickets($PAYMENT_ID, $SHOW_ID, $NO_TICKETS){
+		$PAYMENT_ID = escape_quotes($PAYMENT_ID);
+		$SHOW_ID = escape_quotes($SHOW_ID);
+		$NO_TICKETS = escape_quotes($NO_TICKETS);
+		foreach(range(1,$NO_TICKETS) as $num) {
+		  $query = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID');");
+			oci_execute($query);
+		}	
+	}
+	
+	function getShowroomsByComplex($COMPLEX_ID){
+		$COMPLEX_ID = escape_quotes($COMPLEX_ID);
+		$query = oci_parse($this->conexion, "select SHOW_ROOM_ID from show_room where complex_id='$COMPLEX_ID';");
+		oci_execute($query);
+		while($row=oci_fetch_array($query)){
+			echo '<option>'.$row['SHOW_ROOM_ID'].'</option>';
+		}
 	}
 	
 	function __destruct(){
