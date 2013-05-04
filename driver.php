@@ -354,5 +354,52 @@ CROSS JOIN
 	function __destruct(){
 		oci_close($this->conexion);
 	}
+	
+	function getComplexArray($complex_id) {
+		$complex_id = escape_quotes($complex_id);
+		$query = oci_parse($this->conexion, "SELECT * from complex where complex_id='$complex_id'");			
+		oci_execute($query);
+		$row=oci_fetch_array($query);
+		$array = [
+			"complex_id" => $row['COMPLEX_ID'],
+			"name" => $row['NAME'],
+			"city" => $row['CITY'],
+		];
+		return $array;
+	}
+	
+	function addComplex($complex_id, $name, $city){
+		$complex_id = escape_quotes($complex_id);
+		$name = escape_quotes($name);
+		$city = escape_quotes($city);
+		$query = oci_parse($this->conexion, "insert into complex values ('$complex_id', '$name', '$city')");	
+		return @oci_execute($query);
+	}
+	
+	function updateComplex($complex_id, $name, $city){
+		$complex_id = escape_quotes($complex_id);
+		$name = escape_quotes($name);
+		$city = escape_quotes($city);
+		$query = oci_parse($this->conexion, "update complex set complex_id='$complex_id', name='$name', city='$city'");	
+		return @oci_execute($query);
+	}
+	
+	function deleteComplex($complex_id) {
+		$complex_id = escape_quotes($complex_id);
+		$query = oci_parse($this->conexion, "DELETE FROM show WHERE show_id='$show_id'");
+		oci_commit($this->conexion);
+		return @oci_execute($query);
+	}
+	
+	function getComplexes(){
+		$query = oci_parse($this->conexion, "select * from complex");
+		oci_execute($query);
+		echo "<table>";
+		echo "<tr><td>Complex Id</td><td>Name</td><td>City</td><td>Edit</td><td>Delete</td></tr>";
+		while($row=oci_fetch_array($query)){
+			echo "<tr><td>".$row['COMPLEX_ID']."</td><td>".$row['NAME']."</td><td>".$row['CITY']."</td><td><a href='complex.php?edit=".$row['COMPLEX_ID']."' class='small button'>Edit</a></td><td><a href='complex.php?delete=".$row['COMPLEX_ID']."' class='small button alert'>Delete</a></td></tr>";
+		}
+		echo "</table>";
+	}
 }
 ?>
