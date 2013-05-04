@@ -91,13 +91,13 @@ class dbDriver{
 		echo "</table>";
 	}
 	
-	function getShowsComplex(){
+	function getShowsByComplex(){
 		$query = oci_parse($this->conexion, "select show_id, name, movie_id, date_of_show, show_room_id, complex_id  from show natural join movie order by show_id");
 		oci_execute($query);
 		echo "<table>";
 		echo "<tr><td>Show Id</td><td>Name</td><td>Movie Id</td><td>Date</td><td>Show Room</td><td>Complex Id</td><td>Edit</td><td>Delete</td></tr>";
 		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['SHOW_ID']."</td><td>".$row['NAME']."</td><td>".$row['MOVIE_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['COMPLEX_ID']."</td><td><a href='employee.php?edit=".$row['SHOW_ID']."' class='small button'>Edit</a></td><td><a href='employee.php?delete=".$row['SHOW_ID']."' class='small button alert'>Delete</a></td></tr>";
+			echo "<tr><td>".$row['SHOW_ID']."</td><td>".$row['NAME']."</td><td>".$row['MOVIE_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['COMPLEX_ID']."</td><td><a href='show.php?edit=".$row['SHOW_ID']."' class='small button'>Edit</a></td><td><a href='show.php?delete=".$row['SHOW_ID']."' class='small button alert'>Delete</a></td></tr>";
 		}
 		echo "</table>";
 	}
@@ -195,6 +195,14 @@ class dbDriver{
 		return @oci_execute($query);
 	}
 	
+	function deleteShow($show_id) {
+		$employee_id = escape_quotes($show_id);
+		$query = oci_parse($this->conexion, "DELETE FROM show WHERE show_id='$show_id'");
+		//die("DELETE FROM cinema_employee WHERE employee_id='$employee_id'");
+		oci_commit($this->conexion);
+		return @oci_execute($query);
+	}
+	
 	function login($user, $password){
 		$user = escape_quotes($user);
 		$password = md5($password);
@@ -250,6 +258,16 @@ class dbDriver{
 		$path = escape_quotes($path);
 		$path_banner = escape_quotes($path_banner);
 		$query = oci_parse($this->conexion, "update movie set name='$name', rating='$rating', director='$director', actors='$actors', description='$description', language='$language', path='$path', path_banner='$path_banner' where movie_id='$movie_id'");	
+		return @oci_execute($query);
+	}
+	
+	function updateShow($show_id, $date_of_show, $show_room_id, $complex_id, $movie_id){
+		$show_id = escape_quotes($show_id);
+		$date_of_show = escape_quotes($date_of_show);
+		$show_room_id = escape_quotes($show_room_id);
+		$complex_id = escape_quotes($complex_id);
+		$movie_id = escape_quotes($movie_id);
+		$query = oci_parse($this->conexion, "update show set date_of_show='$date_of_show', show_room_id='$show_room_id', complex_id='$complex_id', movie_id='$movie_id' where show_id='$show_id'");	
 		return @oci_execute($query);
 	}
 	
