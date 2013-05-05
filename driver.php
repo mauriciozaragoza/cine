@@ -104,14 +104,6 @@ class dbDriver{
 		echo "</table>";
 	}
 	
-	function getMovies() {
-		$query = oci_parse($this->conexion, "SELECT * from movie");
-		oci_execute($query);
-		while($row=oci_fetch_array($query)){
-			echo $row['DIRECTOR'];
-		}
-	}
-	
 	function getAllMovies() {
 		$query = oci_parse($this->conexion, "SELECT * from movie");
 		oci_execute($query);
@@ -490,6 +482,17 @@ class dbDriver{
 		}
 		
 		return $success;	
+	}
+	
+	function getMovies(){
+		$query = oci_parse($this->conexion, "select * from movie");
+		oci_execute($query);
+		echo "<table>";
+		echo "<tr><td>Movie Id</td><td>Name</td><td>Rating</td><td>Director</td><td>Actors</td><td>Language</td><td>Edit</td><td>Delete</td></tr>";
+		while($row=oci_fetch_array($query)){
+			echo "<tr><td>".$row['MOVIE_ID']."</td><td>".$row['NAME']."</td><td>".$row['RATING']."</td><td>".$row['DIRECTOR']."</td><td>".$row['ACTORS']."</td><td>".$row['LANGUAGE']."</td><td><a href='movie.php?edit=".$row['MOVIE_ID']."' class='small button'>Edit</a></td><td><a href='movie.php?delete=".$row['MOVIE_ID']."' class='small button alert'>Delete</a></td></tr>";
+		}
+		echo "</table>";
 	}
 }
 ?>
