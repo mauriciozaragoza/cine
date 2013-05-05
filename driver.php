@@ -391,13 +391,20 @@ CROSS JOIN
 		return @oci_execute($query);
 	}
 	
+	function deleteMovie($movie_id) {
+		$movie_id = escape_quotes($movie_id);
+		$query = oci_parse($this->conexion, "DELETE FROM movie WHERE movie_id='$movie_id'");
+		oci_commit($this->conexion);
+		return @oci_execute($query);
+	}
+	
 	function getComplexes(){
 		$query = oci_parse($this->conexion, "select * from complex");
 		oci_execute($query);
 		echo "<table>";
-		echo "<tr><td>Complex Id</td><td>Name</td><td>City</td><td>Edit</td><td>Delete</td></tr>";
+		echo "<tr><td>Complex Id</td><td>Name</td><td>City</td><td>Show romms</td><td>Edit</td><td>Delete</td></tr>";
 		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['COMPLEX_ID']."</td><td>".$row['NAME']."</td><td>".$row['CITY']."</td><td><a href='complex.php?edit=".$row['COMPLEX_ID']."' class='small button'>Edit</a></td><td><a href='complex.php?delete=".$row['COMPLEX_ID']."' class='small button alert'>Delete</a></td></tr>";
+			echo "<tr><td>".$row['COMPLEX_ID']."</td><td>".$row['NAME']."</td><td>".$row['CITY']."</td>"."<td><a href='showroom.php?complex=".$row['COMPLEX_ID']."' class='small button'>Show rooms</a></td>"."<td><a href='complex.php?edit=".$row['COMPLEX_ID']."' class='small button'>Edit</a></td><td><a href='complex.php?delete=".$row['COMPLEX_ID']."' class='small button alert'>Delete</a></td></tr>";
 		}
 		echo "</table>";
 	}

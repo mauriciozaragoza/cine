@@ -5,6 +5,6 @@ $driver = new dbDriver();
 
 //$driver->login('erosespinola', 'trololo');
 $_SESSION["complex_id"] = "C0001";
-$driver->getShowsComplex();
+$driver->getComplexes();
 ?>
 
