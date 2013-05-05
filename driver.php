@@ -5,6 +5,7 @@ function escape_quotes($v) {
 	
 class dbDriver{
 	private $conexion;
+	const TICKETCOST = 4.99;
 	
 	function __construct(){
 		$db_test = '(DESCRIPTION = 
@@ -67,7 +68,7 @@ class dbDriver{
 			echo "<table>";
 			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td><td>Sell</td></tr>";
 			while($row=oci_fetch_array($query)){
-				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>		".'<a href="ticket.php?'.$row['SHOW_ID'].'" class="small button">Sell<br>Tickets</a>'."</td></tr>";
+				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>".'<a href="ticket.php?show='.$row['SHOW_ID'].'" class="small button">Sell<br>Tickets</a>'."</td></tr>";
 			}
 			echo "</table>";
 		}
@@ -296,6 +297,10 @@ class dbDriver{
 		}
 	}
 	
+	function isLogged() {
+		return isset($_SESSION["username"]);
+	}
+	
 	function verifyComplex($complex){		
 		if($complex != $_SESSION["complex_id"]){
 			header('Location: login.php?err=3');
@@ -327,12 +332,12 @@ class dbDriver{
 (select show_room_id from ticket natural join show where show_id='$SHOW_ID' group by show_room_id)) a
 CROSS JOIN
 (select count(show_id) as num from ticket natural join show where show_id='$SHOW_ID' group by show_room_id) b
-);");
+)");
 		oci_execute($query);
 		return $row['AVAILABLE_SITS'];
 	}
 	
-	function sell_tickets($PAYMENT_ID, $SHOW_ID, $NO_TICKETS){
+	function sell_tickets($SHOW_ID, $NO_TICKETS){
 		$PAYMENT_ID = escape_quotes($PAYMENT_ID);
 		$SHOW_ID = escape_quotes($SHOW_ID);
 		$NO_TICKETS = escape_quotes($NO_TICKETS);

@@ -115,7 +115,7 @@ else if ($deleting) {
 		<div class="large-12 columns">
 			<h2>Shows</h2>
 
-			<!-- Grid Example -->
+			
 			<div class="row">
 				<?php
 				switch ($msg) {
