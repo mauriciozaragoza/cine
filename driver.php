@@ -408,5 +408,52 @@ CROSS JOIN
 		}
 		echo "</table>";
 	}
+	
+	function getRooms($complex_id){
+		$complex_id = escape_quotes($complex_id);
+		$query = oci_parse($this->conexion, "select * from show_room where complex_id='$complex_id'");
+		oci_execute($query);
+		echo "<table>";
+		echo "<tr><td>Show Room Id</td><td>Complex Id</td><td>Number of Spots</td><td>Edit</td><td>Delete</td></tr>";
+		while($row=oci_fetch_array($query)){
+			echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['COMPLEX_ID']."</td><td>".$row['NO_SPOTS']."</td><td><a href='showroom.php?edit&showroom=".$row['SHOW_ROOM_ID']."&complex=".$row['COMPLEX_ID']."' class='small button'>Edit</a></td><td><a href='complex.php?delete&showroom=".$row['SHOW_ROOM_ID']."&complex=".$row['COMPLEX_ID']."' class='small button alert'>Delete</a></td></tr>";
+		}
+		echo "</table>";
+	}
+	
+	function addRoom($show_room_id, $complex_id, $no_spots){
+		$show_room_id = escape_quotes($show_room_id);
+		$complex_id = escape_quotes($complex_id);
+		$no_spots = escape_quotes($no_spots);
+		$query = oci_parse($this->conexion, "insert into show_room values ('$show_room_id', '$complex_id', '$no_spots')");	
+		return @oci_execute($query);
+	}
+	
+	function updateRoom($show_room_id, $complex_id, $no_spots){
+		$show_room_id = escape_quotes($show_room_id);
+		$complex_id = escape_quotes($complex_id);
+		$no_spots = escape_quotes($no_spots);
+		$query = oci_parse($this->conexion, "update show_room set complex_id='$complex_id', no_spots='$no_spots' WHERE show_room_id='$show_room_id'");
+		return @oci_execute($query);
+	}
+	
+	function deleteRoom($show_room_id) {
+		$show_room_id = escape_quotes($show_room_id);
+		$query = oci_parse($this->conexion, "DELETE FROM show_room WHERE show_room_id='$show_room_id'");
+		oci_commit($this->conexion);
+		return @oci_execute($query);
+	}
+	function getRoom($show_room_id) {
+		$show_room_id = escape_quotes($show_room_id);
+		$query = oci_parse($this->conexion, "SELECT * from show_room where show_room_id='$show_room_id'");			
+		oci_execute($query);
+		$row=oci_fetch_array($query);
+		$array = [
+			"show_room_id" => $row['SHOW_ROOM_ID'],
+			"complex_id" => $row['COMPLEX_ID'],
+			"no_spots" => $row['NO_SPOTS'],
+		];
+		return $array;
+	}
 }
 ?>
