@@ -20,6 +20,7 @@ $driver->verify("U00");
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
 	<script type="text/javascript">
 	</script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>Ipsum Cinemas</title>
@@ -41,7 +42,7 @@ $driver->verify("U00");
 				<a href="employee.php">Employees</a><br />
 				<a href="movie.php">Movies</a><br />
 				<a href="show.php">Shows</a><br />
-				<a href="catalog.php">Catalog</a><br />
+				<a href="complex.php">Complex</a><br />
 				</div>
 			</div>
         </div>

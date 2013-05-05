@@ -6,7 +6,6 @@ $driver = new dbDriver();
 $driver->verify("U00");
 
 $success = true;
-$sent = false;
 $editing = isset($_GET["edit"]);
 $creating = isset($_GET["create"]);
 $deleting = isset($_GET["delete"]);
@@ -22,7 +21,6 @@ $movie = '';
 
 if ($creating) {
 	if (isset($_GET["submit"])) {
-		$sent = true;
 		$date_show = $_POST["date_show"];
 		$complex = $_POST["complex"];
 		$show_room = $_POST["show_room"];
@@ -35,8 +33,7 @@ if ($creating) {
 }
 else if ($editing) {
 	if (isset($_GET["submit"])) {
-		$sent = true;
-		$show_id = $editing ? $_GET["edit"] : $_POST["show_id"];
+		$show_id = $_GET["edit"];
 		$date_show = $_POST["date_show"];
 		$complex = $_POST["complex"];
 		$show_room = $_POST["show_room"];

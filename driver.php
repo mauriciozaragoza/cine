@@ -380,7 +380,7 @@ CROSS JOIN
 		$complex_id = escape_quotes($complex_id);
 		$name = escape_quotes($name);
 		$city = escape_quotes($city);
-		$query = oci_parse($this->conexion, "update complex set complex_id='$complex_id', name='$name', city='$city'");	
+		$query = oci_parse($this->conexion, "update complex set name='$name', city='$city' WHERE complex_id='$complex_id'");
 		return @oci_execute($query);
 	}
 	

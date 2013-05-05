@@ -1,4 +1,3 @@
-<?php die("Not ready yet"); ?>
 <?php
 require_once("driver.php");
 require_once("layout.php");
@@ -7,7 +6,6 @@ $driver = new dbDriver();
 $driver->verify("U00");
 
 $success = true;
-$sent = false;
 
 $editing = isset($_GET["edit"]);
 $creating = isset($_GET["create"]);
@@ -16,53 +14,44 @@ $reading = !($editing || $creating || $deleting);
 
 $msg = isset($_GET["msg"]) ? $_GET["msg"] : 0;
 
-$show_id = '';
-$date_show = '';
-$complex = '';
-$show_room = '';
-$movie = '';
+$complex_id = '';
+$name = '';
+$city = '';
 
 if ($creating) {
 	if (isset($_GET["submit"])) {
-		$sent = true;
-		$date_show = $_POST["date_show"];
-		$complex = $_POST["complex"];
-		$show_room = $_POST["show_room"];
-		$movie = $_POST["movie"];
+		$complex_id = $_POST["complex_id"];
+		$name = $_POST["name"];
+		$city = $_POST["city"];
 		
-		$success = $driver->addShow($show_id, $date_show, $show_room, $complex, $movie);
-		header("Location: show.php?msg=".($success ? 1 : 4));
+		$success = $driver->addComplex($complex_id, $name, $city);
+		header("Location: complex.php?msg=".($success ? 1 : 4));
 		exit();
 	}
 }
 else if ($editing) {
 	if (isset($_GET["submit"])) {
-		$sent = true;
-		$show_id = $editing ? $_GET["edit"] : $_POST["show_id"];
-		$date_show = $_POST["date_show"];
-		$complex = $_POST["complex"];
-		$show_room = $_POST["show_room"];
-		$movie = $_POST["movie"];
+		$complex_id = $_GET["edit"];
+		$name = $_POST["name"];
+		$city = $_POST["city"];
 		
-		$success = $driver->updateShow($show_id, $date_show, $show_room, $complex, $movie);
+		$success = $driver->updateComplex($complex_id, $name, $city);
 		if ($success) {
-			header("Location: show.php?msg=2");
+			header("Location: complex.php?msg=2");
 		}
 		else {
 			$msg = 5;
 		}
 	}
 
-	$show = $driver->getShow($_GET["edit"]);
-	$show_id = $show["show_id"];
-	$date_show = $show["date_of_show"];
-	$complex = $show["complex_id"];
-	$show_room = $show["show_room_id"];
-	$movie = $show["movie_id"];
+	$complex = $driver->getComplexArray($_GET["edit"]);
+	$complex_id = $complex["complex_id"];
+	$name = $complex["name"];
+	$city = $complex["city"];
 }
 else if ($deleting) {
-	$success = $driver->deleteShow($_GET["delete"]);
-	header("Location: show.php?msg=".($success ? 3 : 6));
+	$success = $driver->deleteComplex($_GET["delete"]);
+	header("Location: complex.php?msg=".($success ? 3 : 6));
 	exit();
 }
 ?>
@@ -73,7 +62,7 @@ else if ($deleting) {
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
-	<title>Ipsum Cinemas :: Shows</title>
+	<title>Ipsum Cinemas :: Complex</title>
 	<link rel="stylesheet" href="css/normalize.css" />
 	<link rel="stylesheet" href="css/foundation.css" />
 	<script src="js/vendor/custom.modernizr.js"></script>
@@ -82,25 +71,9 @@ else if ($deleting) {
 	<script src="js/jquery.validate.js" ></script>
 	<script type="text/javascript">
 	$(document).ready(function() {
-		$("#complex").change(function() {
-			$("#movie").load("movie_loader.php", {}, function() {
-				$(this).prepend('<option disabled selected="selected">Pick a movie</option>');
-			});
-			$("#show_room").load("showroom_loader.php", {"complex":$(this).val()}, function() {
-				$(this).prepend('<option disabled selected="selected">Pick a showroom</option>');
-			});
-		});
-		
 		<?php
 		if ($editing || $creating) {
-			echo '$("#date_show").datepicker({dateFormat: \'d-M-y\'});';
-			echo '$("#show_form").validate();';
-		}
-		
-		if ($editing) {
-			echo '$("#complex").val("'.$complex.'");';
-			echo '$("#movie").val("'.$movie.'");';
-			echo '$("#show_room").val("'.$show_room.'");';
+			echo '$("#complex_form").validate();';
 		}
 		?>
 	});
@@ -111,7 +84,7 @@ else if ($deleting) {
 	<?php print_header($driver); ?>
 	<div class="row">
 		<div class="large-12 columns">
-			<h2>Shows</h2>
+			<h2>Complex</h2>
 
 			<!-- Grid Example -->
 			<div class="row">
@@ -120,7 +93,7 @@ else if ($deleting) {
 				case 1:
 					?>
 					<div data-alert class="alert-box success">
-					  Show added successfully
+					  Complex added successfully
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
@@ -128,7 +101,7 @@ else if ($deleting) {
 				case 2:
 					?>
 					<div data-alert class="alert-box success">
-					  Show updated successfully
+					  Complex updated successfully
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
@@ -136,7 +109,7 @@ else if ($deleting) {
 				case 3:
 					?>
 					<div data-alert class="alert-box success">
-					  Show deleted successfully
+					  Complex deleted successfully
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
@@ -152,7 +125,7 @@ else if ($deleting) {
 				case 6:
 					?>
 					<div data-alert class="alert-box alert">
-					  Could not delete show
+					  Could not delete complex
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
@@ -161,55 +134,34 @@ else if ($deleting) {
 				?>
 				<?php
 				if ($reading) {
-					$driver->getShowsByComplex();
-					echo "<a href='show.php?create' class='small button'>Add new show</a>";
+					$driver->getComplexes();
+					echo "<a href='complex.php?create' class='small button'>Add new complex</a>";
 				}
 				else {
 				?>
-                <form action="show.php?submit<?php echo $editing ? "&edit=$show_id" : "&create"; ?>" id="show_form" method="POST">
+                <form action="complex.php?submit<?php echo $editing ? "&edit=$complex_id" : "&create"; ?>" id="complex_form" method="POST">
 					<fieldset>
-						<legend><?php echo $editing ? "Edit" : "Add" ?> show</legend>
+						<legend><?php echo $editing ? "Edit" : "Add" ?> complex</legend>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="date_show">Date of show *</label>
-								<input type="text" id="date_show" name="date_show" value="<?php echo $editing ? $date_show : ""; ?>" class="required"/>
+								<label for="complex_id">ID *</label>
+								<input type="text" id="complex_id" name="complex_id" value="<?php echo $complex_id ?>" class="required" <?php echo $editing ? "readonly" : "" ?>/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="complex">Complex *</label>
-								<select id="complex" name="complex" class="required">
-								<option selected disabled>Pick a complex</option>
-								<?php $driver->getComplex(); ?>
-								</select>
+								<label for="name">Name *</label>
+								<input type="text" name="name" value="<?php echo $name ?>" class="required"/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="show_room">Show room *</label>
-								<select id="show_room" name="show_room" class="required">
-								<?php 
-								if ($editing) {
-									$driver->getShowroomsByComplex($complex);
-								}
-								?>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="large-4 columns">
-								<label for="movie">Movie *</label>
-								<select id="movie" name="movie" class="required">
-								<?php 
-								if ($editing) {
-									$driver->getMoviesByComplex($complex);
-								}
-								?>
-								</select>
+								<label for="city">City *</label>
+								<input type="text" name="city" value="<?php echo $city ?>" class="required"/>
 							</div>
 						</div>
 						<input type="submit" class="small button" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
-						<a href='show.php' class='small button alert'>Cancel</a>
+						<a href='complex.php' class='small button alert'>Cancel</a>
 					</fieldset>
 				</form>
 				<?php

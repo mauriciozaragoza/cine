@@ -6,7 +6,6 @@ $driver = new dbDriver();
 $driver->verify("U00");
 
 $success = true;
-$sent = false;
 $editing = isset($_GET["edit"]);
 $creating = isset($_GET["create"]);
 $deleting = isset($_GET["delete"]);
@@ -26,8 +25,7 @@ $path_banner = '';
 
 if ($creating) {
 	if (isset($_GET["submit"])) {
-		$sent = true;
-		$movie_id = $editing ? $_GET["edit"] : $_POST["movie_id"];
+		$movie_id = $_POST["movie_id"];
 		$name = $_POST["name"];
 		$rating = $_POST["rating"];
 		$director = $_POST["director"];
@@ -44,8 +42,7 @@ if ($creating) {
 }
 else if ($editing) {
 	if (isset($_GET["submit"])) {
-		$sent = true;
-		$movie_id = $editing ? $_GET["edit"] : $_POST["movie_id"];
+		$movie_id = $_GET["edit"];
 		$name = $_POST["name"];
 		$rating = $_POST["rating"];
 		$director = $_POST["director"];
@@ -105,7 +102,7 @@ else if ($deleting) {
 			echo '$("#complex").val("'.$complex.'");';
 			echo '$("#role").val("'.$role.'");';
 			?>
-			$("#employee_form").validate();
+			$("#movie_form").validate();
 			$.validator.addMethod(
 				"regex",
 				function(value, element, regexp) {
@@ -114,7 +111,7 @@ else if ($deleting) {
 				},
 				"Please check your input"
 			);
-			$("#employee_id").rules("add", { regex: "E[0-9]{4}" });
+			$("#movie_id").rules("add", { regex: "M[0-9]{4}" });
 			<?php
 		}
 		?>
@@ -179,7 +176,7 @@ else if ($deleting) {
 				}
 				else {
 				?>
-                <form action="movie.php?submit<?php echo $editing ? "&edit=$movie_id" : "&create"; ?>" id="employee_form" method="POST">
+                <form action="movie.php?submit<?php echo $editing ? "&edit=$movie_id" : "&create"; ?>" id="movie_form" method="POST">
 					<fieldset>
 						<legend><?php echo $editing ? "Edit" : "Add" ?> movie</legend>
 						<div class="row">

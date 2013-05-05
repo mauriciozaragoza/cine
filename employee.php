@@ -6,7 +6,6 @@ $driver = new dbDriver();
 $driver->verify("U00");
 
 $success = true;
-$sent = false;
 $editing = isset($_GET["edit"]);
 $creating = isset($_GET["create"]);
 $deleting = isset($_GET["delete"]);
@@ -24,8 +23,7 @@ $complex = '';
 
 if ($creating) {
 	if (isset($_GET["submit"])) {
-		$sent = true;
-		$employee_id = $editing ? $_GET["edit"] : $_POST["employee_id"];
+		$employee_id = $_POST["employee_id"];
 		$username = $_POST["username"];
 		$password = $_POST["password"];
 		$first_name = $_POST["first_name"];
@@ -40,8 +38,7 @@ if ($creating) {
 }
 else if ($editing) {
 	if (isset($_GET["submit"])) {
-		$sent = true;
-		$employee_id = $editing ? $_GET["edit"] : $_POST["employee_id"];
+		$employee_id = $_GET["edit"];
 		$username = $_POST["username"];
 		$password = $_POST["password"] == "*****" ? $password : $_POST["password"];
 		$first_name = $_POST["first_name"];
