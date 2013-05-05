@@ -344,16 +344,6 @@ class dbDriver{
 		return oci_fetch_array($query)['NO_SPOTS'];
 	}
 	
-	function sell_tickets($SHOW_ID, $NO_TICKETS){
-		$PAYMENT_ID = escape_quotes($PAYMENT_ID);
-		$SHOW_ID = escape_quotes($SHOW_ID);
-		$NO_TICKETS = escape_quotes($NO_TICKETS);
-		foreach(range(1,$NO_TICKETS) as $num) {
-		  $query = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID')");
-			oci_execute($query);
-		}	
-	}
-	
 	function getShowroomsByComplex($COMPLEX_ID){
 		$COMPLEX_ID = escape_quotes($COMPLEX_ID);
 		$query = oci_parse($this->conexion, "select SHOW_ROOM_ID from show_room where complex_id='$COMPLEX_ID'");
