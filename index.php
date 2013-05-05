@@ -83,7 +83,7 @@ $driver = new dbDriver();
 	<div class="row">
 		<div class="large-12 columns">
 			<h3>Catalog</h3>			
-			<!-- Grid Example -->
+			
 			<div class="row">
 				<div class="large-12 columns">
                 <form id="catalog_form" method="GET" action="catalog.php">

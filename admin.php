@@ -36,7 +36,7 @@ $driver->verify("U00");
 	<div class="row">
 		<div class="large-12 columns">
 			<h3>Admin panel</h3>			
-			<!-- Grid Example -->
+			
 			<div class="row">
 				<div class="large-12 columns">
 				<a href="employee.php">Employees</a><br />

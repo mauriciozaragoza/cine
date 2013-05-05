@@ -325,16 +325,24 @@ class dbDriver{
 		}
 	}
 	
-	function available_sits($SHOW_ID){
-		$SHOW_ID = escape_quotes($SHOW_ID);
-		$query = oci_parse($this->conexion, "select a.num-b.num AVAILABLE_SITS from(
-(select no_spots as num from show_room where show_room_id=
-(select show_room_id from ticket natural join show where show_id='$SHOW_ID' group by show_room_id)) a
-CROSS JOIN
-(select count(show_id) as num from ticket natural join show where show_id='$SHOW_ID' group by show_room_id) b
-)");
+	function available_seats($SHOW_ID){
+		$SHOW_ID = intval($SHOW_ID);
+		$query = oci_parse($this->conexion, "select a.num-b.num AVAILABLE_SEATS from(
+		(select no_spots as num from show_room where show_room_id=
+		(select show_room_id from ticket natural join show where show_id=$SHOW_ID group by show_room_id)) a
+		CROSS JOIN
+		(select count(show_id) as num from ticket natural join show where show_id=$SHOW_ID group by show_room_id) b
+		)");
 		oci_execute($query);
-		return $row['AVAILABLE_SITS'];
+		
+		return oci_fetch_array($query)['AVAILABLE_SEATS'];
+	}
+	
+	function total_seats($show_id) {
+		$show_id = intval($show_id);
+		$query = oci_parse($this->conexion, "SELECT no_spots FROM show_room NATURAL JOIN show WHERE show_id = $show_id");
+		oci_execute($query);		
+		return oci_fetch_array($query)['NO_SPOTS'];
 	}
 	
 	function sell_tickets($SHOW_ID, $NO_TICKETS){

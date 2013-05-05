@@ -3,7 +3,7 @@ require_once("driver.php");
 require_once("layout.php");
 
 $driver = new dbDriver();
-if (!$driver->isLogged() || !isset($_GET["show"]) {
+if (!$driver->isLogged() || !isset($_GET["show"])) {
 	header("Location: catalog.php");
 	exit();
 }
@@ -27,25 +27,12 @@ $show_id = $_GET["show"];
 	<script src="js/jquery.validate.js" ></script>
 	<script type="text/javascript">
 	$(document).ready(function() {
-		$("#employee_form").validate();
-		$.validator.addMethod(
-			"regex",
-			function(value, element, regexp) {
-				var re = new RegExp(regexp);
-				return this.optional(element) || re.test(value);
-			},
-			"Please check your input"
-		);
-		$("#employee_id").rules("add", { regex: "E[0-9]{4}" });
+		$("#ticket_form").validate();
 		
-		<?php
-		if ($editing) {
-			echo '$("#complex").val("'.$complex.'");';
-			echo '$("#role").val("'.$role.'");';
-		}
-		?>
-	});
-	
+		$("#no_tickets").change(function() {
+			$("#amount").val("$" + ($(this).val() * <?php echo dbDriver::TICKETCOST; ?>));
+		});
+	});	
 	</script>
 </head>
 <body>
@@ -57,24 +44,6 @@ $show_id = $_GET["show"];
 					<legend>Sell tickets</legend>
 					<div class="row">
 						<div class="large-4 columns">
-							<label for="username">Username *</label>
-							<input type="text" name="username" value="<?php echo $username ?>" class="required"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="large-4 columns">
-							<label for="password">Password <?php echo $editing ? "*" : ""; ?> </label>
-							<input type="password" name="password" value="<?php echo $editing ? '*****' : ""; ?>" <?php echo $editing ? 'class="required"' : ""; ?> />
-						</div>
-					</div>
-					<div class="row">
-						<div class="large-4 columns">
-							<label for="first_name">First name *</label>
-							<input type="text" name="first_name" value="<?php echo $first_name ?>" class="required"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="large-4 columns">
 							<label for="payform">Payment method *</label>
 							<select id="payform" name="payform">
 							<?php $driver->getPayforms(); ?>
@@ -83,19 +52,24 @@ $show_id = $_GET["show"];
 					</div>
 					<div class="row">
 						<div class="large-4 columns">
-							<label for="amount">Amount</label>
-							<input type="text" id="amount" value="$<?php echo dbDriver::TICKETCOST; ?>" readonly/>
+							<label for="no_tickets">Quantity *</label>
+							<input type="text" id="no_tickets" name="no_tickets" value="1" class="required number"/>
 						</div>
 					</div>
 					<div class="row">
+					<?php 
+						$available_seats = $driver->available_seats($show_id);
+						$total_seats = $driver->total_seats($show_id);
+						
+						echo "$available_seats available seats (out of $total_seats)";
+					?>
+					<div class="progress success small-4"><span class="meter" style="width: <?php echo ($total_seats - $available_seats) / $total_seats * 100.0; ?>%"></span></div>
 						<div class="large-4 columns">
-							<label for="complex">Complex *</label>
-							<select id="complex" name="complex">
-							<?php $driver->getComplex(); ?>
-							</select>
+							<label for="amount">Amount</label>
+							<input type="text" id="amount" value="$<?php echo dbDriver::TICKETCOST; ?>" readonly />
 						</div>
 					</div>
-					<input type="submit" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
+					<input type="submit" class="small button" value="Purchase" />
 				</fieldset>
 			</form>
         </div>
