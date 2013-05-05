@@ -334,7 +334,6 @@ class dbDriver{
 		(select count(show_id) as num from ticket natural join show where show_id=$SHOW_ID group by show_room_id) b
 		)");
 		oci_execute($query);
-		
 		return oci_fetch_array($query)['AVAILABLE_SEATS'];
 	}
 	
@@ -467,6 +466,29 @@ class dbDriver{
 			"no_spots" => $row['NO_SPOTS'],
 		];
 		return $array;
+	}
+	
+	function sell_tickets($PAYFORM_ID, $SHOW_ID, $NO_TICKETS, $EMPLOYEE_ID){
+		$PAYFORM_ID = escape_quotes($PAYFORM_ID);
+		$SHOW_ID = escape_quotes($SHOW_ID);
+		$NO_TICKETS = escape_quotes($NO_TICKETS);
+		if(dbDriver::available_seats($SHOW_ID)>=$NO_TICKETS){
+			$AMOUNT = $NO_TICKETS*dbDriver::price;
+			
+			$query1 = oci_parse($this->conexion, "insert into payment values(PAYMENT_ID_SEQUENCE.nextval, '$AMOUNT', '$NO_TICKETS', '$PAYFORM_ID','$EMPLOYEE_ID')");
+			oci_execute($query1);
+			
+			$query2 = oci_parse($this->conexion, "select rownum, payment_id from (select rownum, payment_id from payment order by rownum desc) where rownum=1");
+			oci_execute($query2);
+			$row=oci_fetch_array($query2);
+			$PAYMENT_ID = $row['PAYMENT_ID'];
+			
+			foreach(range(1,$NO_TICKETS) as $num) {
+			  $query3 = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID')");
+				oci_execute($query3);
+			}
+		}
+				
 	}
 }
 ?>
