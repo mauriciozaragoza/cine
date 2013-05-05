@@ -9,7 +9,7 @@ $success = true;
 
 // complex must be specified
 if (!isset($_GET["complex"])) {
-	header("Location: .php?");
+	header("Location: index.php");
 }
 
 $editing = isset($_GET["edit"]);
@@ -29,32 +29,32 @@ if ($creating) {
 		$no_spots = $_POST["no_spots"];
 		
 		$success = $driver->addRoom($show_room_id, $complex_id, $no_spots);
-		header("Location: showroom.php?msg=".($success ? 1 : 4));
+		header("Location: showroom.php?msg=".($success ? 1 : 4)."&complex=$complex_id");
 		exit();
 	}
 }
 else if ($editing) {
 	if (isset($_GET["submit"])) {
-		$show_room_id = $_GET["edit"];
+		$show_room_id = $_GET["showroom"];
 		$no_spots = $_POST["no_spots"];
 		
-		$success = $driver->updateRoom($show_id, $date_show, $show_room, $complex, $movie);
+		$success = $driver->updateRoom($show_room_id, $complex_id, $no_spots);
 		if ($success) {
-			header("Location: showroom.php?msg=2");
+			header("Location: showroom.php?msg=2&complex=$complex_id");
 		}
 		else {
 			$msg = 5;
 		}
 	}
 
-	$show_room = $driver->getRoom($_GET["edit"]);
+	$show_room = $driver->getRoom($_GET["showroom"], $complex_id);
 	$show_room_id = $show_room["show_room_id"];
 	$complex_id = $show_room["complex_id"];
 	$no_spots = $show_room["no_spots"];
 }
 else if ($deleting) {
-	$success = $driver->deleteRoom($_GET["delete"]);
-	header("Location: showroom.php?msg=".($success ? 3 : 6));
+	$success = $driver->deleteRoom($_GET["showroom"], $complex_id);
+	header("Location: showroom.php?msg=".($success ? 3 : 6)."&complex=$complex_id");
 	exit();
 }
 ?>
@@ -137,27 +137,27 @@ else if ($deleting) {
 				<?php
 				if ($reading) {
 					$driver->getRooms($complex_id);
-					echo "<a href='showroom.php?create' class='small button'>Add new showroom</a>";
+					echo "<a href='showroom.php?create&complex=$complex_id' class='small button'>Add new showroom</a>";
 				}
 				else {
 				?>
-                <form action="showroom.php?submit<?php echo $editing ? "&edit=$show_id" : "&create"; ?>" id="showroom_form" method="POST">
+                <form action="showroom.php?submit<?php echo $editing ? "&edit&showroom=$show_room_id&complex=$complex_id" : "&create&complex=$complex_id"; ?>" id="showroom_form" method="POST">
 					<fieldset>
 						<legend><?php echo $editing ? "Edit" : "Add" ?> showroom</legend>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="showroom_id">ID *</label>
-								<input type="text" id="showroom_id" name="showroom_id" value="<?php echo $showroom_id ?>" class="required" <?php echo $editing ? "readonly" : "" ?>/>
+								<label for="show_room_id">ID *</label>
+								<input type="text" id="show_room_id" name="show_room_id" value="<?php echo $show_room_id ?>" class="required" <?php echo $editing ? "readonly" : "" ?>/>
 							</div>
 						</div>
 						<div class="row">
 							<div class="large-4 columns">
-								<label for="name">Number of spots *</label>
-								<input type="text" name="name" value="<?php echo $name ?>" class="required number"/>
+								<label for="no_spots">Number of spots (must be between 200 and 350) *</label>
+								<input type="text" name="no_spots" value="<?php echo $no_spots ?>" class="required number"/>
 							</div>
 						</div>
 						<input type="submit" class="small button" value="<?php echo $editing ? "Edit" : "Create"; ?>" />
-						<a href='show.php' class='small button alert'>Cancel</a>
+						<a href='showroom.php?complex=<?php echo $complex_id; ?>' class='small button alert'>Cancel</a>
 					</fieldset>
 				</form>
 				<?php

@@ -4,12 +4,16 @@ require_once("layout.php");
 
 $driver = new dbDriver();
 if (!$driver->isLogged() || !isset($_GET["show"])) {
-	header("Location: catalog.php");
+	header("Location: index.php");
 	exit();
 }
 
 $success = true;
 $show_id = $_GET["show"];
+
+if (isset($_GET["submit"])) {
+	$success = $driver->sell_tickets($_POST["payform"], $show_id, $_POST["no_tickets"], $driver->getEmployeeID());
+}
 
 ?>
 <!DOCTYPE html>
@@ -39,7 +43,7 @@ $show_id = $_GET["show"];
 	<?php print_header($driver); ?>
 	<div class="row">
 		<div class="large-12 columns">
-			<form action="ticket.php?submit" id="ticket_form" method="POST">
+			<form action="ticket.php?submit&show=<?php echo $show_id; ?>" id="ticket_form" method="POST">
 				<fieldset>
 					<legend>Sell tickets</legend>
 					<div class="row">

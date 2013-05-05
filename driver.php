@@ -5,7 +5,7 @@ function escape_quotes($v) {
 	
 class dbDriver{
 	private $conexion;
-	const TICKETCOST = 4.99;
+	const TICKETCOST = 49.99;
 	
 	function __construct(){
 		$db_test = '(DESCRIPTION = 
@@ -308,7 +308,7 @@ class dbDriver{
 	}
 	
 	function getEmployeeID(){
-		return $_SESSION["EMPLOYEE_ID"];
+		return $_SESSION["employee_id"];
 	}
 	
 	function getUser(){
@@ -333,25 +333,18 @@ class dbDriver{
 		CROSS JOIN
 		(select count(show_id) as num from ticket natural join show where show_id=$SHOW_ID group by show_room_id) b
 		)");
+		
 		oci_execute($query);
-		return oci_fetch_array($query)['AVAILABLE_SEATS'];
+		$count = oci_fetch_array($query)['AVAILABLE_SEATS'];
+		
+		return isset($count) ? $count : $this->total_seats($SHOW_ID);
 	}
 	
 	function total_seats($show_id) {
 		$show_id = intval($show_id);
 		$query = oci_parse($this->conexion, "SELECT no_spots FROM show_room NATURAL JOIN show WHERE show_id = $show_id");
 		oci_execute($query);		
-		return oci_fetch_array($query)['NO_SPOTS'];
-	}
-	
-	function sell_tickets($SHOW_ID, $NO_TICKETS){
-		$PAYMENT_ID = escape_quotes($PAYMENT_ID);
-		$SHOW_ID = escape_quotes($SHOW_ID);
-		$NO_TICKETS = escape_quotes($NO_TICKETS);
-		foreach(range(1,$NO_TICKETS) as $num) {
-		  $query = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID')");
-			oci_execute($query);
-		}	
+		return @oci_fetch_array($query)['NO_SPOTS'];
 	}
 	
 	function getShowroomsByComplex($COMPLEX_ID){
@@ -428,7 +421,7 @@ class dbDriver{
 		echo "<table>";
 		echo "<tr><td>Show Room Id</td><td>Complex Id</td><td>Number of Spots</td><td>Edit</td><td>Delete</td></tr>";
 		while($row=oci_fetch_array($query)){
-			echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['COMPLEX_ID']."</td><td>".$row['NO_SPOTS']."</td><td><a href='showroom.php?edit&showroom=".$row['SHOW_ROOM_ID']."&complex=".$row['COMPLEX_ID']."' class='small button'>Edit</a></td><td><a href='complex.php?delete&showroom=".$row['SHOW_ROOM_ID']."&complex=".$row['COMPLEX_ID']."' class='small button alert'>Delete</a></td></tr>";
+			echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['COMPLEX_ID']."</td><td>".$row['NO_SPOTS']."</td><td><a href='showroom.php?edit&showroom=".$row['SHOW_ROOM_ID']."&complex=".$row['COMPLEX_ID']."' class='small button'>Edit</a></td><td><a href='showroom.php?delete&showroom=".$row['SHOW_ROOM_ID']."&complex=".$row['COMPLEX_ID']."' class='small button alert'>Delete</a></td></tr>";
 		}
 		echo "</table>";
 	}
@@ -442,22 +435,24 @@ class dbDriver{
 	}
 	
 	function updateRoom($show_room_id, $complex_id, $no_spots){
-		$show_room_id = escape_quotes($show_room_id);
+		$show_room_id = intval($show_room_id);
 		$complex_id = escape_quotes($complex_id);
-		$no_spots = escape_quotes($no_spots);
-		$query = oci_parse($this->conexion, "update show_room set complex_id='$complex_id', no_spots='$no_spots' WHERE show_room_id='$show_room_id'");
+		$no_spots = intval($no_spots);
+		$query = oci_parse($this->conexion, "update show_room set no_spots='$no_spots' WHERE show_room_id='$show_room_id' AND complex_id='$complex_id'");
 		return @oci_execute($query);
 	}
 	
-	function deleteRoom($show_room_id) {
+	function deleteRoom($show_room_id, $complex_id) {
 		$show_room_id = escape_quotes($show_room_id);
-		$query = oci_parse($this->conexion, "DELETE FROM show_room WHERE show_room_id='$show_room_id'");
+		//die("DELETE FROM show_room WHERE show_room_id='$show_room_id' AND complex_id='$complex_id'");
+		$query = oci_parse($this->conexion, "DELETE FROM show_room WHERE show_room_id='$show_room_id' AND complex_id='$complex_id'");
 		oci_commit($this->conexion);
 		return @oci_execute($query);
 	}
-	function getRoom($show_room_id) {
+	
+	function getRoom($show_room_id, $complex_id) {
 		$show_room_id = escape_quotes($show_room_id);
-		$query = oci_parse($this->conexion, "SELECT * from show_room where show_room_id='$show_room_id'");			
+		$query = oci_parse($this->conexion, "SELECT * from show_room WHERE show_room_id='$show_room_id' AND complex_id='$complex_id'");			
 		oci_execute($query);
 		$row=oci_fetch_array($query);
 		$array = [
@@ -470,13 +465,15 @@ class dbDriver{
 	
 	function sell_tickets($PAYFORM_ID, $SHOW_ID, $NO_TICKETS, $EMPLOYEE_ID){
 		$PAYFORM_ID = escape_quotes($PAYFORM_ID);
-		$SHOW_ID = escape_quotes($SHOW_ID);
-		$NO_TICKETS = escape_quotes($NO_TICKETS);
-		if(dbDriver::available_seats($SHOW_ID)>=$NO_TICKETS){
-			$AMOUNT = $NO_TICKETS*dbDriver::price;
+		$SHOW_ID = intval($SHOW_ID);
+		$NO_TICKETS = intval($NO_TICKETS);
+		$success = true;
+		
+		if($this->available_seats($SHOW_ID)>=$NO_TICKETS){
+			$AMOUNT = $NO_TICKETS*dbDriver::TICKETCOST;
 			
 			$query1 = oci_parse($this->conexion, "insert into payment values(PAYMENT_ID_SEQUENCE.nextval, '$AMOUNT', '$NO_TICKETS', '$PAYFORM_ID','$EMPLOYEE_ID')");
-			oci_execute($query1);
+			$success &= oci_execute($query1);
 			
 			$query2 = oci_parse($this->conexion, "select rownum, payment_id from (select rownum, payment_id from payment order by rownum desc) where rownum=1");
 			oci_execute($query2);
@@ -485,10 +482,14 @@ class dbDriver{
 			
 			foreach(range(1,$NO_TICKETS) as $num) {
 			  $query3 = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID')");
-				oci_execute($query3);
+				$success &= oci_execute($query3);
 			}
 		}
-				
+		else {
+			$success = false;
+		}
+		
+		return $success;	
 	}
 }
 ?>
