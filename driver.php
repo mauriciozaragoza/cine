@@ -51,8 +51,7 @@ class dbDriver{
 	
 	function getMoviesByComplex($complex_id){
 		$complex_id = escape_quotes($complex_id);
-		// FIXME deben ser distinct
-		$query = oci_parse($this->conexion, "SELECT NAME, MOVIE_ID from movie NATURAL JOIN show where complex_id='$complex_id'");
+		$query = oci_parse($this->conexion, "SELECT DISTINCT NAME, MOVIE_ID from movie NATURAL JOIN show where complex_id='$complex_id'");
 		oci_execute($query);
 		while($row=oci_fetch_array($query)){
 			echo '<option value="'.$row['MOVIE_ID'].'">'.$row['NAME'].'</option>';
