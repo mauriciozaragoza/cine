@@ -192,7 +192,6 @@ class dbDriver{
 	function deleteEmployee($employee_id) {
 		$employee_id = escape_quotes($employee_id);
 		$query = oci_parse($this->conexion, "DELETE FROM cinema_employee WHERE employee_id='$employee_id'");
-		//die("DELETE FROM cinema_employee WHERE employee_id='$employee_id'");
 		oci_commit($this->conexion);
 		return @oci_execute($query);
 	}
@@ -200,7 +199,6 @@ class dbDriver{
 	function deleteShow($show_id) {
 		$employee_id = escape_quotes($show_id);
 		$query = oci_parse($this->conexion, "DELETE FROM show WHERE show_id='$show_id'");
-		//die("DELETE FROM cinema_employee WHERE employee_id='$employee_id'");
 		oci_commit($this->conexion);
 		return @oci_execute($query);
 	}

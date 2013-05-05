@@ -147,7 +147,7 @@ else if ($deleting) {
 				case 6:
 					?>
 					<div data-alert class="alert-box alert">
-					  Could not delete show
+					  Could not delete show, tickets were already bought
 					  <a href="#" class="close">&times;</a>
 					</div>
 					<?php
