@@ -14,14 +14,7 @@ function print_header($driver) {
 	<section class="top-bar-section">
 		<ul class="right">
 		 <li class="has-form" style="backgroud-color:#000000;"> <form>
-          <div class="row collapse">
-            <div class="small-8 columns">
-              <input type="text">
-            </div>
-            <div class="small-4 columns">
-              <a href="#" class="button">Search</a>
-            </div>
-          </div>
+ 
         </form></li>
 		  <li class="divider"></li>
 		  <li class="has-form" style="color:#FFFFFF;">
@@ -52,15 +45,14 @@ function print_footer() {
 <hr />
 <div class="row">
 	<div class="small-4 columns">
-		about<br/>
-		legal<br/>
+		About<br/>
+		Legal<br/>
 	</div>
 	<div class="small-4 columns">
-		contact us<br/>
-		links<br/>
-	</div>
+		Contact Us<br/>
+			</div>
 	<div class="small-4 columns">
-		<a href="admin.php">admin panel</a>
+		<a href="admin.php">Admin Panel</a>
 	</div>
 </div>
 <?php
