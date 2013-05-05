@@ -21,15 +21,11 @@ $driver->verify("U00");
 	<script type="text/javascript">
 	</script>
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>Ipsum Cinemas</title>
-  <link rel="stylesheet" href="css/normalize.css" />
-  <link rel="stylesheet" href="css/foundation.css" />
-  <script src="js/vendor/custom.modernizr.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
-  <script type="text/javascript">
-  </script>
+  <style>
+		body {background-image:url('img/background/fondo.jpg');}
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+	</style>
 </head>
 <body>
     <?php print_header($driver); ?>
@@ -38,12 +34,13 @@ $driver->verify("U00");
 			<h3>Admin panel</h3>			
 			
 			<div class="row">
-				<div class="large-12 columns">
-				<a href="employee.php">Employees</a><br />
-				<a href="movie.php">Movies</a><br />
-				<a href="show.php">Shows</a><br />
-				<a href="complex.php">Complex</a><br />
-				</div>
+			<table>
+			<tr><td width=600>Option</td><td>Edit</td></tr>
+				<tr><td>Employees</td><td><a href="employee.php" class="small button">Edit<br>Employees</a></td></tr>
+				<tr><td>Movies </td><td><a href="movie.php" class="small button">Edit<br>Movies</a></td></tr>
+				<tr><td>Shows</td><td><a href="show.php" class="small button">Edit<br>Shows</a></td></tr>
+				<tr><td>Complexes</td><td><a href="complex.php" class="small button">Edit<br>Complexes</a></td></tr>
+			</table>
 			</div>
         </div>
 	</div>    

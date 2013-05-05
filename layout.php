@@ -42,7 +42,6 @@ function print_header($driver) {
 
 function print_footer() {
 ?>
-<hr />
 <div class="row">
 	<div class="small-4 columns">
 		About<br/>

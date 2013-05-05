@@ -44,16 +44,11 @@ $driver = new dbDriver();
 		});
 	});
 	</script>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>Ipsum Cinemas</title>
-  <link rel="stylesheet" href="css/normalize.css" />
-  <link rel="stylesheet" href="css/foundation.css" />
-  <script src="js/vendor/custom.modernizr.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
-  <script type="text/javascript">
-  </script>
-  <style>body {background-image:url('img/background/fondo.jpg');}</style>
+    <style>
+		body {background-image:url('img/background/fondo.jpg');}
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+	</style>
 </head>
 <body>
     <?php print_header($driver); ?>
