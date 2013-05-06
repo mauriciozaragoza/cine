@@ -276,7 +276,7 @@ class dbDriver{
 		$show_room_id = escape_quotes($show_room_id);
 		$complex_id = escape_quotes($complex_id);
 		$movie_id = escape_quotes($movie_id);
-		$query = oci_parse($this->conexion, "insert into show values (show_id_sequence.nextval, '$date_of_show', '$show_room_id', '$complex_id', '$movie_id')");
+		$query = oci_parse($this->conexion, "insert into show values (show_id_sequence.nextval, '$show_room_id', '$complex_id', '$movie_id', '$date_of_show')");
 		return @oci_execute($query);
 	}
 	
@@ -473,7 +473,7 @@ CROSS JOIN
 			$PAYMENT_ID = $row['PAYMENT_ID'];
 			
 			foreach(range(1,$NO_TICKETS) as $num) {
-			  $query3 = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,sysdate,'$PAYMENT_ID','$SHOW_ID')");
+			  $query3 = oci_parse($this->conexion, "insert into ticket values(TICKET_ID_SEQUENCE.nextval,'$PAYMENT_ID','$SHOW_ID', current_timestamp)");
 				$success &= oci_execute($query3);
 			}
 		}
