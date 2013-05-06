@@ -65,17 +65,17 @@ class dbDriver{
 		oci_execute($query);
 		if (isset($_SESSION["username"])) {
 			echo "<table>";
-			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td><td>Sell</td></tr>";
+			echo "<tr><td>Showroom</td><td>Date</td><td>Language</td><td>Sell</td></tr>";
 			while($row=oci_fetch_array($query)){
-				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td><td>".'<a href="ticket.php?show='.$row['SHOW_ID'].'" class="small button">Sell<br>Tickets</a>'."</td></tr>";
+				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td>".$row['LANGUAGE']."</td><td>".'<a href="ticket.php?show='.$row['SHOW_ID'].'" class="small button">Sell<br>Tickets</a>'."</td></tr>";
 			}
 			echo "</table>";
 		}
 		else{
 			echo "<table>";
-			echo "<tr><td>Showroom</td><td>Date</td><td>Hour</td><td>Language</td></tr>";
+			echo "<tr><td>Showroom</td><td>Date</td><td>Language</td></tr>";
 			while($row=oci_fetch_array($query)){
-				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td></td><td>".$row['LANGUAGE']."</td></tr>";
+				echo "<tr><td>".$row['SHOW_ROOM_ID']."</td><td>".$row['DATE_OF_SHOW']."</td><td>".$row['LANGUAGE']."</td></tr>";
 			}
 			echo "</table>";
 		}
