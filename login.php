@@ -22,11 +22,6 @@ if (isset($_POST["user"])) {
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
   <script type="text/javascript">
   </script>
-  <style>
-		body {background-image:url('img/background/fondo.jpg');}
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-	</style>
 </head>
 <body>
 	<?php 

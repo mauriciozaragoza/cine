@@ -5,12 +5,19 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box; }
 
+body {
+	
+}
+table {
+	width:100%;
+}  
 html,
 body {
   font-size: 100%; }
 
 body {
-  background: white;
+  background-image:url('../img/background/fondo.jpg');
+  /*background: white;*/
   color: #222222;
   padding: 0;
   margin: 0;
@@ -1647,7 +1654,9 @@ textarea {
 fieldset {
   border: solid 1px #dddddd;
   padding: 1.25em;
-  margin: 1.125em 0; }
+  margin: 1.125em 0; 
+  background:#ffffff;
+  }
   fieldset legend {
     font-weight: bold;
     background: white;

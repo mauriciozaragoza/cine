@@ -20,12 +20,6 @@ $driver->verify("U00");
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
 	<script type="text/javascript">
 	</script>
-
-  <style>
-		body {background-image:url('img/background/fondo.jpg');}
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-	</style>
 </head>
 <body>
     <?php print_header($driver); ?>
@@ -35,7 +29,7 @@ $driver->verify("U00");
 			
 			<div class="row">
 			<table>
-			<tr><td width=600>Option</td><td>Edit</td></tr>
+			<tr><td>Option</td><td>Edit</td></tr>
 				<tr><td>Employees</td><td><a href="employee.php" class="small button">Edit<br>Employees</a></td></tr>
 				<tr><td>Movies </td><td><a href="movie.php" class="small button">Edit<br>Movies</a></td></tr>
 				<tr><td>Shows</td><td><a href="show.php" class="small button">Edit<br>Shows</a></td></tr>

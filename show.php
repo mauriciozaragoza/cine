@@ -71,10 +71,12 @@ else if ($deleting) {
 	<title>Ipsum Cinemas :: Shows</title>
 	<link rel="stylesheet" href="css/normalize.css" />
 	<link rel="stylesheet" href="css/foundation.css" />
+	<link rel="stylesheet" href="css/dot-luv/jquery-ui-1.10.3.custom.min.css" />
 	<script src="js/vendor/custom.modernizr.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-	<script src="js/jquery.validate.js" ></script>
+	<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+	<script src="js/jquery-ui-timepicker-addon.js"></script>
+	<script src="js/jquery.validate.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function() {
 		$("#complex").change(function() {
@@ -88,7 +90,7 @@ else if ($deleting) {
 		
 		<?php
 		if ($editing || $creating) {
-			echo '$("#date_show").datepicker({dateFormat: \'d-M-y\'});';
+			echo '$("#date_show").datetimepicker({dateFormat: "d-M-y", timeFormat: "hh.mm.ss.l TT"});';
 			echo '$("#show_form").validate();';
 		}
 		
@@ -101,11 +103,6 @@ else if ($deleting) {
 	});
 	
 	</script>
-	<style>
-		body {background-image:url('img/background/fondo.jpg');}
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-	</style>
 </head>
 <body>
 	<?php print_header($driver); ?>

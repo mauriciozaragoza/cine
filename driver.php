@@ -316,16 +316,16 @@ class dbDriver{
 	
 	function available_seats($SHOW_ID){
 		$SHOW_ID = intval($SHOW_ID);
-		$query = oci_parse($this->conexion, "select a.num-b.num AVAILABLE_SITS from(
-(select no_spots as num from show_room where show_room_id=
-(select show_room_id from ticket natural join show where show_id='$SHOW_ID' group by show_room_id)
-AND
-complex_id=
-(select complex_id from ticket natural join show where show_id='$SHOW_ID' group by complex_id)) a
-CROSS JOIN
-(select count(show_id) as num from ticket natural join show where show_id='$SHOW_ID' group by show_room_id) b
-);");
-		
+		$query = oci_parse($this->conexion, "select a.num-b.num AVAILABLE_SEATS from(
+		(select no_spots as num from show_room where show_room_id=
+		(select show_room_id from ticket natural join show where show_id='$SHOW_ID' group by show_room_id)
+		AND
+		complex_id=
+		(select complex_id from ticket natural join show where show_id='$SHOW_ID' group by complex_id)) a
+		CROSS JOIN
+		(select count(show_id) as num from ticket natural join show where show_id='$SHOW_ID' group by show_room_id) b
+		)");
+				
 		oci_execute($query);
 		$count = oci_fetch_array($query)['AVAILABLE_SEATS'];
 		

@@ -44,11 +44,6 @@ $driver = new dbDriver();
 		});
 	});
 	</script>
-    <style>
-		body {background-image:url('img/background/fondo.jpg');}
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-	</style>
 </head>
 <body>
     <?php print_header($driver); ?>
