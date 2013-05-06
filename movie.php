@@ -108,11 +108,6 @@ else if ($deleting) {
 			$("#movie_id").rules("add", { regex: "M[0-9]{4}" });
 			<?php
 		}
-		
-		if ($editing) {
-			echo '$("#complex").val("'.$complex.'");';
-			echo '$("#role").val("'.$role.'");';
-		}
 		?>
 	});
 	
