@@ -62,7 +62,7 @@ class dbDriver{
 		$complex_id = escape_quotes($complex_id);
 		$movie_id = escape_quotes($movie_id);
 		$query = oci_parse($this->conexion, "SELECT show_id,show_room_id, date_of_show, language from movie NATURAL JOIN show 
-where complex_id='C0001' AND movie_id='M0001' AND date_of_show>((select current_timestamp from dual)- interval '15' minute)");
+where complex_id='$complex_id' AND movie_id='$movie_id' AND date_of_show>((select current_timestamp from dual)- interval '15' minute)");
 		oci_execute($query);
 		if (isset($_SESSION["username"])) {
 			echo "<table>";
