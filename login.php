@@ -61,11 +61,13 @@ if (isset($_POST["user"])) {
 			}
 			?>
             <form action="login.php" method="POST">
-				<label for="user">Username</label>
-				<input name="user" type="text" />
-				<label for="password">Password</label>
-				<input name="password" type="password" />
-				<input type="submit" value="Log-in" />
+				<fieldset>
+					<label for="user">Username</label>
+					<input name="user" type="text" />
+					<label for="password">Password</label>
+					<input name="password" type="password" />
+					<input class="small button" type="submit" value="Log-in" />
+				</fieldset>
             </form>
         </div>
 	</div>

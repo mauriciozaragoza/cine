@@ -5,9 +5,13 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box; }
 
-body {
-	
-}
+ .footer {
+	background:#ffffff;
+	padding-bottom:1em;
+	padding-top:1em;
+	opacity:0.8;
+	border-radius:1em;
+ }
 table {
 	width:100%;
 }  

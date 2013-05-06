@@ -42,13 +42,13 @@ function print_header($driver) {
 
 function print_footer() {
 ?>
-<div class="row">
+<div class="row footer">
 	<div class="small-4 columns">
-		About<br/>
-		Legal<br/>
+		<a href="https://github.com/mauriciozaragoza/cine">About</a><br/>
+		<a href="https://github.com/mauriciozaragoza/cine">Legal</a><br/>
 	</div>
 	<div class="small-4 columns">
-		Contact Us<br/>
+		<a href="http://erosespinola.blogspot.mx">Contact Us</a><br/>
 			</div>
 	<div class="small-4 columns">
 		<a href="admin.php">Admin Panel</a>
