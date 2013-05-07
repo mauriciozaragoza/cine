@@ -384,7 +384,8 @@ where complex_id='$complex_id' AND movie_id='$movie_id' AND date_of_show>((selec
 	
 	function deleteComplex($complex_id) {
 		$complex_id = escape_quotes($complex_id);
-		$query = oci_parse($this->conexion, "DELETE FROM show WHERE show_id='$show_id'");
+		
+		$query = oci_parse($this->conexion, "DELETE FROM complex WHERE complex_id='$complex_id'");
 		oci_commit($this->conexion);
 		return @oci_execute($query);
 	}
